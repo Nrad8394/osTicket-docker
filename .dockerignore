@@ -1,0 +1,28 @@
+# Build context is the PARENT directory (contains both osTicket_config/ and osTicket/)
+# This file must live in the parent dir alongside docker-compose.yml
+
+# Never send secrets
+osTicket_config/.env
+
+# Runtime data — large, not needed for image build
+osTicket_config/data/
+
+# Git history
+.git
+.gitignore
+
+# Docs
+osTicket_config/README.md
+dir_str.txt
+
+# Editor noise
+.DS_Store
+*.swp
+*.swo
+Thumbs.db
+__pycache__
+
+# Backup/temp files
+*.sql
+*.tar.gz
+*.bak

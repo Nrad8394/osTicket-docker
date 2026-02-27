@@ -1,0 +1,133 @@
+# ─────────────────────────────────────────────────────────────────
+#  All persistent data lives in ./data/ next to this compose file.
+#  To migrate: just copy the entire project folder to the new VM
+#  and run `docker-compose up -d --build`. Done.
+#
+#  Folder layout created automatically on first run:
+#    ./data/
+#    ├── mysql/          ← full database files
+#    ├── attachments/    ← ticket attachments & uploads
+#    └── logs/           ← apache + php error logs
+# ─────────────────────────────────────────────────────────────────
+
+services:
+
+  # ─────────────────────────────────────────────
+  #  DATABASE
+  # ─────────────────────────────────────────────
+  mysql:
+    image: mysql:8.0
+    container_name: osticket_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-R00tS3cur3Pass!}
+      MYSQL_DATABASE:      ${MYSQL_DATABASE:-osticket}
+      MYSQL_USER:          ${MYSQL_USER:-osticket}
+      MYSQL_PASSWORD:      ${MYSQL_PASSWORD:-0sT1ck3tPass!}
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --innodb-buffer-pool-size=256M
+      --max-allowed-packet=64M
+      --require_secure_transport=OFF
+    volumes:
+      - ./data/mysql:/var/lib/mysql:Z,U
+    networks:
+      - osticket_net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost",
+             "-u", "root", "--password=${MYSQL_ROOT_PASSWORD:-R00tS3cur3Pass!}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  # ─────────────────────────────────────────────
+  #  OSTICKET APP
+  # ─────────────────────────────────────────────
+  osticket:
+    build:
+      # Context is the PARENT directory so Docker can see both:
+      #   osTicket_config/  (Dockerfile, config/, scripts/)
+      #   osTicket/         (the osTicket source files)
+      context: .
+      dockerfile: Dockerfile
+      args:
+        OSTICKET_DIR: ./osTicket-v1.18.3/upload
+    container_name: osticket_app
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8080}:80"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      # Database
+      MYSQL_HOST:          mysql
+      MYSQL_PORT:          3306
+      MYSQL_DATABASE:      ${MYSQL_DATABASE:-osticket}
+      MYSQL_USER:          ${MYSQL_USER:-osticket}
+      MYSQL_PASSWORD:      ${MYSQL_PASSWORD:-0sT1ck3tPass!}
+      MYSQL_PREFIX:        ${MYSQL_PREFIX:-ost_}
+
+      # osTicket admin account (created on first boot)
+      OST_ADMIN_EMAIL:     ${OST_ADMIN_EMAIL:-admin@example.com}
+      OST_ADMIN_FNAME:     ${OST_ADMIN_FNAME:-Admin}
+      OST_ADMIN_LNAME:     ${OST_ADMIN_LNAME:-User}
+      OST_ADMIN_USER:      ${OST_ADMIN_USER:-ostadmin}
+      OST_ADMIN_PASS:      ${OST_ADMIN_PASS:-Adm1nP@ss!}
+
+      # osTicket site settings
+      OST_SITE_NAME:       ${OST_SITE_NAME:-Support Center}
+      OST_SITE_EMAIL:      ${OST_SITE_EMAIL:-support@example.com}
+      OST_HELPDESK_URL:    ${OST_HELPDESK_URL:-http://localhost:8080}
+
+    volumes:
+      - ./data/attachments:/var/www/html/attachments:Z,U
+      - ./data/logs:/var/log/apache2:Z,U
+    networks:
+      - osticket_net
+  # phpMyAdmin with enhanced security
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: osticket-phpmyadmin
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: ${MYSQL_USER:-osticket}
+      PMA_PASSWORD: ${MYSQL_PASSWORD:-0sT1ck3tPass!}
+      UPLOAD_LIMIT: 256M
+      MEMORY_LIMIT: 512M
+      MAX_EXECUTION_TIME: 600
+      TZ: ${TZ:-UTC}
+      # Security settings
+      PMA_ABSOLUTE_URI: ${PMA_URL:-http://localhost:8081}
+    ports:
+      - "${PHPMYADMIN_PORT:-8081}:80"
+    networks:
+      - osticket_net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+# ─────────────────────────────────────────────
+#  No named volumes — everything is in ./data/
+# ─────────────────────────────────────────────
+networks:
+  osticket_net:
+    name: osticket_net
+    driver: bridge
