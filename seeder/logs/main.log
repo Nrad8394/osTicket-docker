@@ -1,0 +1,74 @@
+2026-03-02 11:55:26,943 - __main__ - INFO - ======================================================================
+2026-03-02 11:55:26,943 - __main__ - INFO - OSTICKET SEEDING ORCHESTRATION STARTED
+2026-03-02 11:55:26,943 - __main__ - INFO - Start Time: 2026-03-02 11:55:26.943621
+2026-03-02 11:55:26,943 - __main__ - INFO - Demo Mode: False
+2026-03-02 11:55:26,943 - __main__ - INFO - ======================================================================
+2026-03-02 11:55:27,063 - connection - INFO - Database connection pool initialized successfully
+2026-03-02 11:55:27,063 - __main__ - INFO - Database connection established successfully
+2026-03-02 11:55:27,063 - __main__ - INFO - 
+2026-03-02 11:55:27,063 - __main__ - INFO - [1/12] Roles
+2026-03-02 11:55:27,064 - __main__ - INFO - Dependencies: None
+2026-03-02 11:55:27,064 - __main__ - INFO - Critical: True
+2026-03-02 11:55:27,064 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 11:55:27,070 - connection - ERROR - Query execution failed: 1146 (42S02): Table 'osticket.ost_ost_role' doesn't exist
+2026-03-02 11:55:27,070 - connection - ERROR - Query: 
+            INSERT INTO ost_ost_role (id, name, permissions, created) 
+            VALUES (%s, %s, %s, %s)
+            ON DUPLICATE KEY UPDATE name=VALUES(name), permissions=VALUES(permissions), created=VALUES(created), updated=NOW()
+        
+2026-03-02 11:55:27,070 - base - ERROR - INSERT OR UPDATE failed for ost_role: 1146 (42S02): Table 'osticket.ost_ost_role' doesn't exist
+2026-03-02 11:55:27,073 - __main__ - ERROR - [FAIL] Roles seeding failed: 1146 (42S02): Table 'osticket.ost_ost_role' doesn't exist
+2026-03-02 11:55:27,073 - __main__ - CRITICAL - Critical seeder failed. Aborting remaining seeders.
+2026-03-02 11:55:27,073 - __main__ - INFO - 
+2026-03-02 11:55:27,073 - __main__ - INFO - ======================================================================
+2026-03-02 11:55:27,073 - __main__ - INFO - SEEDING ORCHESTRATION SUMMARY
+2026-03-02 11:55:27,074 - __main__ - INFO - ======================================================================
+2026-03-02 11:55:27,074 - __main__ - INFO - Total Steps: 12
+2026-03-02 11:55:27,074 - __main__ - INFO - Successful: 0
+2026-03-02 11:55:27,074 - __main__ - INFO - Failed: 1
+2026-03-02 11:55:27,074 - __main__ - INFO - Total Records Inserted: 0
+2026-03-02 11:55:27,074 - __main__ - INFO - Total Records Updated: 0
+2026-03-02 11:55:27,074 - __main__ - INFO - Duration: 0.13 seconds
+2026-03-02 11:55:27,075 - __main__ - INFO - 
+2026-03-02 11:55:27,075 - __main__ - INFO - Detailed Results:
+2026-03-02 11:55:27,075 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 11:55:27,088 - __main__ - INFO - ======================================================================
+2026-03-02 11:55:27,088 - __main__ - INFO - End Time: 2026-03-02 11:55:27.073296
+2026-03-02 11:55:27,088 - __main__ - INFO - ======================================================================
+2026-03-02 12:02:20,901 - __main__ - INFO - ======================================================================
+2026-03-02 12:02:20,902 - __main__ - INFO - OSTICKET SEEDING ORCHESTRATION STARTED
+2026-03-02 12:02:20,902 - __main__ - INFO - Start Time: 2026-03-02 12:02:20.901993
+2026-03-02 12:02:20,902 - __main__ - INFO - Demo Mode: False
+2026-03-02 12:02:20,902 - __main__ - INFO - ======================================================================
+2026-03-02 12:02:21,170 - connection - INFO - Database connection pool initialized successfully
+2026-03-02 12:02:21,172 - __main__ - INFO - Database connection established successfully
+2026-03-02 12:02:21,175 - __main__ - INFO - 
+2026-03-02 12:02:21,175 - __main__ - INFO - [1/12] Roles
+2026-03-02 12:02:21,180 - __main__ - INFO - Dependencies: None
+2026-03-02 12:02:21,181 - __main__ - INFO - Critical: True
+2026-03-02 12:02:21,184 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 12:02:21,194 - connection - ERROR - Query execution failed: 1364 (HY000): Field 'updated' doesn't have a default value
+2026-03-02 12:02:21,195 - connection - ERROR - Query: 
+            INSERT INTO ost_role (id, name, permissions, created) 
+            VALUES (%s, %s, %s, %s)
+            ON DUPLICATE KEY UPDATE name=VALUES(name), permissions=VALUES(permissions), created=VALUES(created), updated=NOW()
+        
+2026-03-02 12:02:21,200 - base - ERROR - INSERT OR UPDATE failed for role: 1364 (HY000): Field 'updated' doesn't have a default value
+2026-03-02 12:02:21,201 - __main__ - ERROR - [FAIL] Roles seeding failed: 1364 (HY000): Field 'updated' doesn't have a default value
+2026-03-02 12:02:21,202 - __main__ - CRITICAL - Critical seeder failed. Aborting remaining seeders.
+2026-03-02 12:02:21,203 - __main__ - INFO - 
+2026-03-02 12:02:21,207 - __main__ - INFO - ======================================================================
+2026-03-02 12:02:21,214 - __main__ - INFO - SEEDING ORCHESTRATION SUMMARY
+2026-03-02 12:02:21,219 - __main__ - INFO - ======================================================================
+2026-03-02 12:02:21,221 - __main__ - INFO - Total Steps: 12
+2026-03-02 12:02:21,224 - __main__ - INFO - Successful: 0
+2026-03-02 12:02:21,227 - __main__ - INFO - Failed: 1
+2026-03-02 12:02:21,228 - __main__ - INFO - Total Records Inserted: 0
+2026-03-02 12:02:21,232 - __main__ - INFO - Total Records Updated: 0
+2026-03-02 12:02:21,237 - __main__ - INFO - Duration: 0.30 seconds
+2026-03-02 12:02:21,239 - __main__ - INFO - 
+2026-03-02 12:02:21,243 - __main__ - INFO - Detailed Results:
+2026-03-02 12:02:21,251 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 12:02:21,301 - __main__ - INFO - ======================================================================
+2026-03-02 12:02:21,302 - __main__ - INFO - End Time: 2026-03-02 12:02:21.203574
+2026-03-02 12:02:21,302 - __main__ - INFO - ======================================================================
