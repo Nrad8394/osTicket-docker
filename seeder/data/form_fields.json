@@ -3,7 +3,7 @@
     "id": 50,
     "form_id": 2,
     "label": "Priority",
-    "type": "dropdown",
+    "type": "choices",
     "hint": "Select ticket priority level",
     "configuration": {
       "list_id": 1,
@@ -16,7 +16,7 @@
     "id": 51,
     "form_id": 2,
     "label": "Impact",
-    "type": "dropdown",
+    "type": "choices",
     "hint": "Select the business impact level",
     "configuration": {
       "list_id": 2,
@@ -29,7 +29,7 @@
     "id": 52,
     "form_id": 2,
     "label": "Urgency",
-    "type": "dropdown",
+    "type": "choices",
     "hint": "Select timing urgency",
     "configuration": {
       "list_id": 3,
@@ -42,7 +42,7 @@
     "id": 53,
     "form_id": 2,
     "label": "System Category",
-    "type": "dropdown",
+    "type": "choices",
     "hint": "Select the affected system or application",
     "configuration": {
       "list_id": 4,
@@ -52,10 +52,10 @@
     "sort_order": 53
   },
   {
-    "id": 544,
+    "id": 54,
     "form_id": 2,
     "label": "Issue Type",
-    "type": "dropdown",
+    "type": "choices",
     "hint": "Classify the type of issue",
     "configuration": {
       "list_id": 5,
@@ -68,7 +68,7 @@
     "id": 55,
     "form_id": 2,
     "label": "Description",
-    "type": "textarea",
+    "type": "memo",
     "hint": "Provide detailed description of the issue",
     "configuration": {
       "required": true,
@@ -81,7 +81,7 @@
     "id": 56,
     "form_id": 2,
     "label": "Steps to Reproduce",
-    "type": "textarea",
+    "type": "memo",
     "hint": "List steps to reproduce the issue",
     "configuration": {
       "required": false,
@@ -120,7 +120,7 @@
     "id": 59,
     "form_id": 2,
     "label": "Attachments",
-    "type": "file",
+    "type": "files",
     "hint": "Upload screenshots or relevant files",
     "configuration": {
       "required": false,

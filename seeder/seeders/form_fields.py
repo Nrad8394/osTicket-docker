@@ -64,9 +64,11 @@ class FormFieldSeeder(BaseSeeder):
     
     def _validate_fields(self, fields: list) -> None:
         """Validate form field data before insertion"""
+        # osTicket valid types (from class.forms.php static $types)
         valid_types = {
-            'text', 'textarea', 'dropdown', 'date', 'checkbox', 
-            'radio', 'file', 'phone', 'email', 'url'
+            'text', 'memo', 'thread', 'datetime', 'timezone',
+            'phone', 'bool', 'choices', 'files', 'break', 'info',
+            'priority', 'state'  # special field types
         }
         
         for field in fields:
@@ -74,15 +76,15 @@ class FormFieldSeeder(BaseSeeder):
             assert 'label' in field, f"Field must have 'label': {field}"
             assert 'type' in field, f"Field must have 'type': {field}"
             assert field['type'] in valid_types, \
-                f"Field type must be one of {valid_types}: {field}"
+                f"Field type must be one of {valid_types}: got {field['type']} in {field}"
             
-            # If type is dropdown, configuration must have list_id
-            if field['type'] == 'dropdown':
+            # If type is choices (dropdown), configuration must have list_id
+            if field['type'] == 'choices':
                 config = field.get('configuration', {})
                 if isinstance(config, str):
                     config = json.loads(config)
                 assert 'list_id' in config, \
-                    f"Dropdown field must have list_id in configuration: {field}"
+                    f"Choices field must have list_id in configuration: {field}"
 
 
 if __name__ == '__main__':
