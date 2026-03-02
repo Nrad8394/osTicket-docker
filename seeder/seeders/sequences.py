@@ -16,6 +16,9 @@ from config import Config
 class SequenceSeeder(BaseSeeder):
     """Seed osTicket ticket numbering sequences"""
     
+    # ost_sequence table doesn't have 'created' field, only 'updated'
+    auto_add_created = False
+    
     def __init__(self, connection):
         super().__init__(connection)
         self.table_name = 'sequence'
@@ -31,6 +34,19 @@ class SequenceSeeder(BaseSeeder):
         
         # Insert or update each sequence
         for seq in sequences_data:
+            # Remove unsupported fields (pattern, description, created don't exist in table)
+            seq.pop('pattern', None)
+            seq.pop('description', None)
+            seq.pop('created', None)
+            
+            # Add default values for required fields if not present
+            if 'next' not in seq:
+                seq['next'] = 1
+            if 'increment' not in seq:
+                seq['increment'] = 1
+            if 'padding' not in seq:
+                seq['padding'] = '0'
+            
             self.insert_or_update(
                 table=self.table_name,
                 data=seq,
@@ -45,9 +61,7 @@ class SequenceSeeder(BaseSeeder):
         for seq in sequences:
             assert 'id' in seq, f"Sequence must have 'id': {seq}"
             assert 'name' in seq, f"Sequence must have 'name': {seq}"
-            assert 'pattern' in seq, f"Sequence must have 'pattern': {seq}"
             assert isinstance(seq['id'], int), f"Sequence id must be integer: {seq}"
-            assert '{num}' in seq['pattern'], f"Sequence pattern must contain {{num}}: {seq}"
 
 
 if __name__ == '__main__':

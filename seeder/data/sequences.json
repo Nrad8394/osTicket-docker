@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "name": "Default Ticket Number",
+    "pattern": "KRA-%Y%M-{num}",
+    "description": "Standard ticket format: KRA-YYYYMM-NNN (e.g., KRA-202501-001)",
+    "created": "2025-01-01 00:00:00"
+  },
+  {
+    "id": 2,
+    "name": "Simple Numeric",
+    "pattern": "{num}",
+    "description": "Simple numeric only (1, 2, 3, ...)",
+    "created": "2025-01-01 00:00:00"
+  }
+]

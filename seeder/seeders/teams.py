@@ -32,7 +32,7 @@ class TeamSeeder(BaseSeeder):
             self.insert_or_update(
                 table=self.table_name,
                 data=team,
-                key_cols=['id']
+                key_cols=['team_id']
             )
         
         # Return summary
@@ -41,9 +41,9 @@ class TeamSeeder(BaseSeeder):
     def _validate_teams(self, teams: list) -> None:
         """Validate team data before insertion"""
         for team in teams:
-            assert 'id' in team, f"Team must have 'id': {team}"
+            assert 'team_id' in team, f"Team must have 'team_id': {team}"
             assert 'name' in team, f"Team must have 'name': {team}"
-            assert isinstance(team['id'], int), f"Team id must be integer: {team}"
+            assert isinstance(team['team_id'], int), f"Team team_id must be integer: {team}"
             assert isinstance(team['name'], str), f"Team name must be string: {team}"
 
 

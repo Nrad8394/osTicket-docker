@@ -1,0 +1,115 @@
+[
+  {
+    "id": 1,
+    "name": "New",
+    "state": "open",
+    "color": "#3498db",
+    "icon": "icon-file"
+  },
+  {
+    "id": 2,
+    "name": "Assigned",
+    "state": "open",
+    "color": "#9b59b6",
+    "icon": "icon-user"
+  },
+  {
+    "id": 3,
+    "name": "In Progress",
+    "state": "open",
+    "color": "#e67e22",
+    "color_hex": "e67e22",
+    "icon": "icon-spinner"
+  },
+  {
+    "id": 4,
+    "name": "On Hold",
+    "state": "open",
+    "color": "#95a5a6",
+    "icon": "icon-pause"
+  },
+  {
+    "id": 5,
+    "name": "Waiting on Customer",
+    "state": "open",
+    "color": "#f39c12",
+    "icon": "icon-hourglass"
+  },
+  {
+    "id": 6,
+    "name": "Pending Review",
+    "state": "open",
+    "color": "#16a085",
+    "icon": "icon-eye"
+  },
+  {
+    "id": 7,
+    "name": "Escalated",
+    "state": "open",
+    "color": "#c0392b",
+    "icon": "icon-exclamation"
+  },
+  {
+    "id": 8,
+    "name": "Information Needed",
+    "state": "open",
+    "color": "#2980b9",
+    "icon": "icon-question"
+  },
+  {
+    "id": 9,
+    "name": "Ready for Closure",
+    "state": "closed",
+    "color": "#27ae60",
+    "icon": "icon-check"
+  },
+  {
+    "id": 10,
+    "name": "Resolved",
+    "state": "resolved",
+    "color": "#27ae60",
+    "icon": "icon-check-circle"
+  },
+  {
+    "id": 11,
+    "name": "Closed",
+    "state": "closed",
+    "color": "#34495e",
+    "icon": "icon-ban"
+  },
+  {
+    "id": 12,
+    "name": "Reopened",
+    "state": "open",
+    "color": "#d35400",
+    "icon": "icon-refresh"
+  },
+  {
+    "id": 13,
+    "name": "Not a Bug",
+    "state": "resolved",
+    "color": "#8e44ad",
+    "icon": "icon-ok"
+  },
+  {
+    "id": 14,
+    "name": "Duplicate",
+    "state": "closed",
+    "color": "#7f8c8d",
+    "icon": "icon-copy"
+  },
+  {
+    "id": 15,
+    "name": "Won't Fix",
+    "state": "closed",
+    "color": "#c0392b",
+    "icon": "icon-close"
+  },
+  {
+    "id": 16,
+    "name": "Unable to Reproduce",
+    "state": "closed",
+    "color": "#95a5a6",
+    "icon": "icon-search"
+  }
+]

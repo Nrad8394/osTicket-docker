@@ -1,0 +1,50 @@
+[
+  {
+    "id": 10,
+    "name": "Business Application Support (BAS)",
+    "signature": "",
+    "created": "2026-03-01 00:00:00"
+  },
+  {
+    "id": 11,
+    "name": "Business Systems Development (BSD)",
+    "signature": "",
+    "created": "2026-03-01 00:00:00"
+  },
+  {
+    "id": 12,
+    "name": "Quality Assurance (QA)",
+    "signature": "",
+    "created": "2026-03-01 00:00:00"
+  },
+  {
+    "id": 13,
+    "name": "Systems & Data Management (SA&DM)",
+    "signature": "",
+    "created": "2026-03-01 00:00:00"
+  },
+  {
+    "id": 14,
+    "name": "Infrastructure & Operations (I&O)",
+    "signature": "",
+    "created": "2026-03-01 00:00:00"
+  },
+  {
+    "id": 15,
+    "name": "Security & Compliance (S&C)",
+    "signature": "",
+    "created": "2026-03-01 00:00:00"
+  },
+  {
+    "id": 16,
+    "name": "Technical Support (TS)",
+    "signature": "",
+    "created": "2026-03-01 00:00:00"
+  },
+  {
+    "id": 17,
+    "name": "Service Management (SM)",
+    "signature": "",
+    "created": "2026-03-01 00:00:00"
+  }
+]

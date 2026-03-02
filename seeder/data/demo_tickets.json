@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "number": "KRA-202501-001",
+    "email": "john.doe@example.com",
+    "name": "John Doe",
+    "dept_id": 1,
+    "staff_id": 2,
+    "topic_id": 100,
+    "priority": "High",
+    "subject": "Demo Ticket: iTax System Login Issue",
+    "description": "Unable to access iTax system for 2 hours. Getting authentication errors.",
+    "created": "2025-01-15 08:30:00",
+    "updated": "2025-01-15 09:00:00"
+  },
+  {
+    "id": 2,
+    "number": "KRA-202501-002",
+    "email": "jane.smith@example.com",
+    "name": "Jane Smith",
+    "dept_id": 2,
+    "staff_id": 3,
+    "topic_id": 105,
+    "priority": "Medium",
+    "subject": "Demo Ticket: Database Performance Degradation",
+    "description": "Queries running slower than usual. Need performance analysis.",
+    "created": "2025-01-15 10:00:00",
+    "updated": "2025-01-15 10:30:00"
+  },
+  {
+    "id": 3,
+    "number": "KRA-202501-003",
+    "email": "mike.wilson@example.com",
+    "name": "Mike Wilson",
+    "dept_id": 5,
+    "staff_id": 4,
+    "topic_id": 101,
+    "priority": "Critical",
+    "subject": "Demo Ticket: System Outage - Infrastructure Down",
+    "description": "Complete system outage affecting all users. Immediate attention required.",
+    "created": "2025-01-15 12:00:00",
+    "updated": "2025-01-15 12:15:00"
+  },
+  {
+    "id": 4,
+    "number": "KRA-202501-004",
+    "email": "sarah.jones@example.com",
+    "name": "Sarah Jones",
+    "dept_id": 3,
+    "staff_id": 5,
+    "topic_id": 106,
+    "priority": "Low",
+    "subject": "Demo Ticket: Minor UI Enhancement Request",
+    "description": "UI button layout could be improved for better usability.",
+    "created": "2025-01-15 14:00:00",
+    "updated": "2025-01-15 14:30:00"
+  },
+  {
+    "id": 5,
+    "number": "KRA-202501-005",
+    "email": "robert.brown@example.com",
+    "name": "Robert Brown",
+    "dept_id": 4,
+    "staff_id": 6,
+    "topic_id": 102,
+    "priority": "High",
+    "subject": "Demo Ticket: Data Sync Error",
+    "description": "Data not syncing between systems. Last sync was yesterday.",
+    "created": "2025-01-15 15:00:00",
+    "updated": "2025-01-15 15:45:00"
+  }
+]

@@ -1,0 +1,132 @@
+[
+  {
+    "id": 50,
+    "form_id": 2,
+    "label": "Priority",
+    "type": "dropdown",
+    "hint": "Select ticket priority level",
+    "configuration": {
+      "list_id": 1,
+      "required": true,
+      "default": "Medium"
+    },
+    "sort_order": 50
+  },
+  {
+    "id": 51,
+    "form_id": 2,
+    "label": "Impact",
+    "type": "dropdown",
+    "hint": "Select the business impact level",
+    "configuration": {
+      "list_id": 2,
+      "required": true,
+      "default": "Department"
+    },
+    "sort_order": 51
+  },
+  {
+    "id": 52,
+    "form_id": 2,
+    "label": "Urgency",
+    "type": "dropdown",
+    "hint": "Select timing urgency",
+    "configuration": {
+      "list_id": 3,
+      "required": false,
+      "default": "Medium"
+    },
+    "sort_order": 52
+  },
+  {
+    "id": 53,
+    "form_id": 2,
+    "label": "System Category",
+    "type": "dropdown",
+    "hint": "Select the affected system or application",
+    "configuration": {
+      "list_id": 4,
+      "required": true,
+      "default": "General"
+    },
+    "sort_order": 53
+  },
+  {
+    "id": 544,
+    "form_id": 2,
+    "label": "Issue Type",
+    "type": "dropdown",
+    "hint": "Classify the type of issue",
+    "configuration": {
+      "list_id": 5,
+      "required": true,
+      "default": "Bug"
+    },
+    "sort_order": 54
+  },
+  {
+    "id": 55,
+    "form_id": 2,
+    "label": "Description",
+    "type": "textarea",
+    "hint": "Provide detailed description of the issue",
+    "configuration": {
+      "required": true,
+      "rows": 5,
+      "placeholder": "Please describe the issue in detail..."
+    },
+    "sort_order": 55
+  },
+  {
+    "id": 56,
+    "form_id": 2,
+    "label": "Steps to Reproduce",
+    "type": "textarea",
+    "hint": "List steps to reproduce the issue",
+    "configuration": {
+      "required": false,
+      "rows": 4,
+      "placeholder": "1. Step one\n2. Step two\n3. Step three..."
+    },
+    "sort_order": 56
+  },
+  {
+    "id": 57,
+    "form_id": 2,
+    "label": "Expected Result",
+    "type": "text",
+    "hint": "What should happen",
+    "configuration": {
+      "required": false,
+      "max_length": 255,
+      "placeholder": "Describe expected behavior..."
+    },
+    "sort_order": 57
+  },
+  {
+    "id": 58,
+    "form_id": 2,
+    "label": "Actual Result",
+    "type": "text",
+    "hint": "What actually happened",
+    "configuration": {
+      "required": false,
+      "max_length": 255,
+      "placeholder": "Describe actual behavior..."
+    },
+    "sort_order": 58
+  },
+  {
+    "id": 59,
+    "form_id": 2,
+    "label": "Attachments",
+    "type": "file",
+    "hint": "Upload screenshots or relevant files",
+    "configuration": {
+      "required": false,
+      "max_size": 52428800,
+      "allowed_types": ["jpg", "jpeg", "png", "pdf", "doc", "docx", "xls", "xlsx", "txt", "log"]
+    },
+    "sort_order": 59
+  }
+]

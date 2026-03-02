@@ -1,0 +1,37 @@
+[
+  {
+    "team_id": 10,
+    "name": "iTax Support Team",
+    "created": "2026-03-01 00:00:00"
+  },
+  {
+    "team_id": 11,
+    "name": "iCMS Support Team",
+    "created": "2026-03-01 00:00:00"
+  },
+  {
+    "team_id": 12,
+    "name": "iBid Support Team",
+    "created": "2026-03-01 00:00:00"
+  },
+  {
+    "team_id": 13,
+    "name": "iSCAN Support Team",
+    "created": "2026-03-01 00:00:00"
+  },
+  {
+    "team_id": 14,
+    "name": "WIMS Support Team",
+    "created": "2026-03-01 00:00:00"
+  },
+  {
+    "team_id": 15,
+    "name": "Database Support Team",
+    "created": "2026-03-01 00:00:00"
+  },
+  {
+    "team_id": 16,
+    "name": "Infrastructure Support Team",
+    "created": "2026-03-01 00:00:00"
+  }
+]

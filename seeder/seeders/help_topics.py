@@ -23,7 +23,6 @@ class System:
     name: str
     code: str
     ispublic: int = 1
-    isactive: int = 1
 
 
 @dataclass
@@ -57,25 +56,25 @@ class HelpTopicGenerator:
         IssueType(
             name="Bug",
             code="BUG",
-            dept_id=1,  # BAS
-            team_id=1,  # BAS-Analysts
-            sla_base=1,  # SLAs 1, 2, 3 (Minor, Medium, Major)
+            dept_id=10,  # BAS
+            team_id=10,  # BAS-Analysts
+            sla_base=10,  # SLAs 10, 11, 12 (Minor, Medium, Major)
             ispublic=1
         ),
         IssueType(
             name="Enhancement",
             code="ENH",
-            dept_id=2,  # BSD
-            team_id=2,  # BSD-Developers
-            sla_base=4,  # SLAs 4, 5, 6
+            dept_id=11,  # BSD
+            team_id=11,  # BSD-Developers
+            sla_base=13,  # SLAs 13, 14, 15
             ispublic=1
         ),
         IssueType(
             name="DB Intervention",
             code="DBI",
-            dept_id=4,  # SA&DM
-            team_id=4,  # SA&DM-Officers
-            sla_base=7,  # SLAs 7, 8, 9
+            dept_id=13,  # SA&DM
+            team_id=13,  # SA&DM-Officers
+            sla_base=16,  # SLAs 16, 17, 18
             ispublic=0  # Not visible to external users
         ),
     ]
@@ -123,12 +122,19 @@ class HelpTopicGenerator:
                 'topic_id': system.id,
                 'topic_pid': 0,  # Top-level (no parent)
                 'topic': f"{system.name} Issues",
-                'dept_id': 1,  # BAS as default intake
-                'team_id': 1,  # BAS-Analysts triage all incoming
-                'sla_id': 10,  # Default SLA (48-hour fallback)
+                'dept_id': 10,  # BAS as default intake
+                'staff_id': 0,  # No specific staff assignment
+                'team_id': 10,  # BAS-Analysts triage all incoming
+                'sla_id': 19,  # Default SLA (48-hour fallback)
+                'page_id': 0,  # No custom thank-you page
+                'sequence_id': 0,  # Use default numbering
                 'ispublic': system.ispublic,
-                'isactive': system.isactive,
+                'noautoresp': 0,  # Send auto-response
+                'flags': 0,  # No special flags
+                'status_id': 0,  # Use ticket status default
+                'priority_id': 0,  # Use priority default
                 'notes': f"Parent category for {system.name} system issues",
+                'number_format': None,  # Use default format
                 'sort': system.id,
             }
             topics.append(topic)
@@ -162,12 +168,19 @@ class HelpTopicGenerator:
                         'topic_pid': system.id,  # Child of system parent topic
                         'topic': topic_name,
                         'dept_id': issue_type.dept_id,  # Route to appropriate dept
+                        'staff_id': 0,  # No specific staff assignment
                         'team_id': issue_type.team_id,  # Assign to appropriate team
                         'sla_id': sla_id,  # Apply appropriate SLA
+                        'page_id': 0,  # No custom thank-you page
+                        'sequence_id': 0,  # Use default numbering
                         'ispublic': issue_type.ispublic if issue_type.code != 'DBI' else 0,
-                        'isactive': 1,
+                        'noautoresp': 0,  # Send auto-response
+                        'flags': 0,  # No special flags
+                        'status_id': 0,  # Use ticket status default
+                        'priority_id': 0,  # Use priority default
                         'sort': topic_id,
                         'notes': f"Auto-routes {system.code} {issue_type.code} {severity['code']} to {issue_type.name}",
+                        'number_format': None,  # Use default format
                     }
                     topics.append(topic)
                     topic_id += 1
@@ -186,36 +199,57 @@ class HelpTopicGenerator:
                 'topic_id': 18,
                 'topic_pid': 0,  # Top-level
                 'topic': "Change Management / RFC",
-                'dept_id': 6,  # Change Management dept
-                'team_id': 5,  # Change-Management team
-                'sla_id': 5,  # Enhancement-Medium SLA (5 days)
+                'dept_id': 15,  # Change Management dept (S&C)
+                'staff_id': 0,
+                'team_id': 14,  # Change-Management team (WIMS)
+                'sla_id': 14,  # Enhancement-Medium SLA (5 days)
+                'page_id': 0,
+                'sequence_id': 0,
                 'ispublic': 0,  # Internal only
-                'isactive': 1,
+                'noautoresp': 0,
+                'flags': 0,
+                'status_id': 0,
+                'priority_id': 0,
                 'notes': "RFC reviews and change approvals",
+                'number_format': None,
                 'sort': 18,
             },
             {
                 'topic_id': 19,
                 'topic_pid': 0,  # Top-level
                 'topic': "DB Intervention Request",
-                'dept_id': 4,  # SA&DM
-                'team_id': 4,  # SA&DM-Officers
-                'sla_id': 8,  # DB-Medium SLA (same-day)
+                'dept_id': 13,  # SA&DM
+                'staff_id': 0,
+                'team_id': 13,  # SA&DM-Officers (iSCAN)
+                'sla_id': 17,  # DB-Medium SLA (same-day)
+                'page_id': 0,
+                'sequence_id': 0,
                 'ispublic': 0,  # Internal only
-                'isactive': 1,
+                'noautoresp': 0,
+                'flags': 0,
+                'status_id': 0,
+                'priority_id': 0,
                 'notes': "Direct database intervention requests",
+                'number_format': None,
                 'sort': 19,
             },
             {
                 'topic_id': 20,
                 'topic_pid': 0,  # Top-level
                 'topic': "Security Incidents (ISS)",
-                'dept_id': 7,  # Information System Security
-                'team_id': 1,  # BAS-Analysts for initial triage
-                'sla_id': 3,  # Bug-Major SLA (4 hours — critical)
+                'dept_id': 16,  # Information System Security (TS)
+                'staff_id': 0,
+                'team_id': 10,  # BAS-Analysts for initial triage (iTax)
+                'sla_id': 12,  # Bug-Major SLA (4 hours — critical)
+                'page_id': 0,
+                'sequence_id': 0,
                 'ispublic': 0,  # Internal only
-                'isactive': 1,
+                'noautoresp': 0,
+                'flags': 0,
+                'status_id': 0,
+                'priority_id': 0,
                 'notes': "Security incidents requiring ISS investigation",
+                'number_format': None,
                 'sort': 20,
             },
         ]
@@ -246,11 +280,11 @@ class HelpTopicGenerator:
         
         # Check dept_id/team_id/sla_id ranges (basic validation)
         for topic in topics:
-            if topic['dept_id'] < 1 or topic['dept_id'] > 8:
+            if topic['dept_id'] < 10 or topic['dept_id'] > 17:
                 errors.append(f"Topic {topic['topic_id']}: invalid dept_id {topic['dept_id']}")
-            if topic['team_id'] < 1 or topic['team_id'] > 7:
+            if topic['team_id'] < 10 or topic['team_id'] > 16:
                 errors.append(f"Topic {topic['topic_id']}: invalid team_id {topic['team_id']}")
-            if topic['sla_id'] < 1 or topic['sla_id'] > 10:
+            if topic['sla_id'] < 10 or topic['sla_id'] > 19:
                 errors.append(f"Topic {topic['topic_id']}: invalid sla_id {topic['sla_id']}")
         
         if errors:
@@ -258,7 +292,7 @@ class HelpTopicGenerator:
                 self.logger.error(error)
             return False
         
-        self.logger.info(f"✓ All {len(topics)} topics validated successfully")
+        self.logger.info(f"[OK] All {len(topics)} topics validated successfully")
         return True
 
 
@@ -287,13 +321,27 @@ class HelpTopicSeeder(BaseSeeder):
             self.log_info(f"Inserting {len(topics)} help topics...")
             
             for topic in topics:
-                # Prepare SQL
-                cols = ', '.join(topic.keys())
-                vals = ', '.join(['%s'] * len(topic))
+                # Add timestamps
+                topic['created'] = 'NOW()'
+                topic['updated'] = 'NOW()'
+                
+                # Prepare SQL with proper timestamp handling
+                cols = list(topic.keys())
+                vals = list(topic.values())
+                
+                # Build placeholders, use NOW() for timestamps
+                placeholders = []
+                clean_vals = []
+                for col, val in zip(cols, vals):
+                    if val == 'NOW()':
+                        placeholders.append('NOW()')
+                    else:
+                        placeholders.append('%s')
+                        clean_vals.append(val)
                 
                 sql = f"""
-                    INSERT INTO {self.table('help_topic')} ({cols})
-                    VALUES ({vals})
+                    INSERT INTO {self.table('help_topic')} ({', '.join(cols)})
+                    VALUES ({', '.join(placeholders)})
                     ON DUPLICATE KEY UPDATE
                         topic=VALUES(topic),
                         dept_id=VALUES(dept_id),
@@ -302,14 +350,14 @@ class HelpTopicSeeder(BaseSeeder):
                         updated=NOW()
                 """
                 
-                result = self.conn.execute(sql, list(topic.values()))
+                result = self.conn.execute(sql, clean_vals)
                 if result.rowcount > 0:
                     if result.lastrowid > 0:
                         self._inserted_ids.append(result.lastrowid)
                     else:
                         self._updated_ids.append(topic['topic_id'])
             
-            self.log_info(f"✓ Help topics seeding complete: {len(self._inserted_ids)} inserted, {len(self._updated_ids)} updated")
+            self.log_info(f"[OK] Help topics seeding complete: {len(self._inserted_ids)} inserted, {len(self._updated_ids)} updated")
             
             return {
                 'success': True,

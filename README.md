@@ -58,11 +58,74 @@ docker-compose logs -f osticket
 # 4. Open your browser
 open http://localhost:8080
 
-# 5. Log in with your admin credentials from .env
-#    Default: ostadmin / Adm1nP@ss!
+# 5. Log in with admin credentials
+# Initial admin: ostadmin / Adm1nP@ss! (from .env)
+# After seeding: sadmin / AdminSecurePass123! (configured in seeder/data/staff.json)
+# See "Database Seeding" section below for details
 ```
 
 That's it. Nothing else to do.
+
+---
+
+## Database Seeding (Production Data)
+
+After the initial Docker setup, you can populate osTicket with production-ready data using the Python seeding system in the `seeder/` directory.
+
+### What Gets Seeded
+
+The seeder populates your osTicket instance with:
+- **12 Staff Accounts** with bcrypt-hashed passwords (agents, supervisors, managers)
+- **8 Departments** (BAS, BSD, ICT, Legal, Customer Service, HR, Finance, Admin)
+- **7 Teams** (Desktop Support, Network Team, Security Team, Development, Help Desk, Field Ops, Management)
+- **10 SLA Plans** (Business-critical to routine, with appropriate response times)
+- **10 Staff Roles** with permission matrices
+- **83 Help Topics** with intelligent routing (auto-assigns based on issue type and severity)
+- **16 Custom Ticket Statuses** (beyond default Open/Closed)
+- **12 Ticket Filters** for auto-assignment and notifications
+- **5 Custom Lists** with 150+ predefined items (Priority Levels, Issue Types, etc.)
+- **26 Custom Form Fields** for structured data collection
+
+### Running the Seeder
+
+```bash
+# Navigate to seeder directory
+cd seeder
+
+# Create Python virtual environment
+python -m venv .venv
+.venv\Scripts\activate  # Windows
+# OR: source .venv/bin/activate  # Linux/Mac
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Configure database connection
+# The seeder automatically reads from the root .env file
+# No need for a separate seeder/.env (though you can create one if desired)
+
+# Run the seeder (recommended: full mode with backup)
+python main.py --mode full --backup --verbose
+```
+
+### Seeding Modes
+
+- **`--mode full`**: INSERT or UPDATE all records (non-destructive, recommended)
+- **`--mode partial`**: INSERT IGNORE (skips existing records, safest)
+- **`--mode validate`**: Check readiness without making changes
+
+### Important Notes
+
+⚠️ **Admin Account**: The seeder will update `staff_id=1` (the admin account) with credentials from `seeder/data/staff.json`:
+- Username: `sadmin`
+- Email: `admin@kra.gov`  
+- Password: `AdminSecurePass123!`
+
+To preserve your original admin account from `.env`, edit `seeder/data/staff.json` and remove the first entry (id=1) before running the seeder.
+
+✅ **Data Safety**: All seeding operations use `INSERT ... ON DUPLICATE KEY UPDATE` patterns - existing data is preserved and only updated where specified. No destructive DELETE operations are performed.
+
+📖 **Full Documentation**: See [seeder/README.md](seeder/README.md) for complete details on customization, data files, and troubleshooting.
 
 ---
 

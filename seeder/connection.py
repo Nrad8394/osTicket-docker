@@ -78,7 +78,7 @@ class DatabaseConnection:
         self.connection = connection
         self._transaction_started = False
     
-    def execute(self, query: str, params: tuple = None) -> int:
+    def execute(self, query: str, params: tuple = None):
         """Execute a query (INSERT, UPDATE, DELETE).
         
         Args:
@@ -86,17 +86,56 @@ class DatabaseConnection:
             params: Query parameters
         
         Returns:
-            Number of affected rows
+            Object with rowcount and lastrowid attributes
         """
         cursor = None
         try:
             cursor = self.connection.cursor()
             cursor.execute(query, params or ())
-            affected_rows = cursor.rowcount
-            logger.debug(f"Query executed: {affected_rows} rows affected")
-            return affected_rows
+            
+            # Create result object with rowcount and lastrowid
+            class QueryResult:
+                def __init__(self, rowcount, lastrowid):
+                    self.rowcount = rowcount
+                    self.lastrowid = lastrowid
+            
+            result = QueryResult(cursor.rowcount, cursor.lastrowid)
+            logger.debug(f"Query executed: {result.rowcount} rows affected")
+            return result
         except Error as e:
             logger.error(f"Query execution failed: {str(e)}")
+            logger.error(f"Query: {query}")
+            raise
+        finally:
+            if cursor:
+                cursor.close()
+    
+    def execute_many(self, query: str, params_list: list):
+        """Execute a query with multiple sets of parameters (bulk operation).
+        
+        Args:
+            query: SQL query with %s placeholders
+            params_list: List of parameter tuples/lists
+        
+        Returns:
+            Object with rowcount and lastrowid attributes
+        """
+        cursor = None
+        try:
+            cursor = self.connection.cursor()
+            cursor.executemany(query, params_list)
+            
+            # Create result object with rowcount and lastrowid
+            class QueryResult:
+                def __init__(self, rowcount, lastrowid):
+                    self.rowcount = rowcount
+                    self.lastrowid = lastrowid
+            
+            result = QueryResult(cursor.rowcount, cursor.lastrowid)
+            logger.debug(f"Bulk query executed: {result.rowcount} rows affected")
+            return result
+        except Error as e:
+            logger.error(f"Bulk query execution failed: {str(e)}")
             logger.error(f"Query: {query}")
             raise
         finally:
@@ -156,17 +195,23 @@ class DatabaseConnection:
     
     def commit(self) -> None:
         """Commit transaction."""
-        if self._transaction_started:
+        try:
             self.connection.commit()
             self._transaction_started = False
             logger.debug("Transaction committed")
+        except Error as e:
+            logger.error(f"Failed to commit transaction: {str(e)}")
+            raise
     
     def rollback(self) -> None:
         """Rollback transaction."""
-        if self._transaction_started:
+        try:
             self.connection.rollback()
             self._transaction_started = False
             logger.debug("Transaction rolled back")
+        except Error as e:
+            logger.error(f"Failed to rollback transaction: {str(e)}")
+            raise
     
     def close(self) -> None:
         """Return connection to pool."""

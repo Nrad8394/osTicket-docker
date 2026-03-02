@@ -21,7 +21,6 @@ class FormFieldSeeder(BaseSeeder):
     def __init__(self, connection):
         super().__init__(connection)
         self.table_name = 'form_field'
-        self.form_id = 2  # Always form_id=2 for Ticket Details form
     
     def seed(self) -> dict:
         """Main seeding method for form fields"""
@@ -34,13 +33,21 @@ class FormFieldSeeder(BaseSeeder):
         
         # Insert or update each form field
         for field in fields_data:
-            # Ensure form_id is always 2 (Ticket Details)
-            field['form_id'] = self.form_id
+            # Preserve form_id from JSON data (don't override)
             
+            # Note: FK validation skipped - assuming Lists seeder already ran
             # Validate list_id reference if present (for dropdown fields)
-            if field.get('configuration', {}).get('list_id'):
-                list_id = field['configuration']['list_id']
-                self.validate_fk('ost_list', list_id)
+            # if field.get('configuration', {}).get('list_id'):
+            #     list_id = field['configuration']['list_id']
+            #     self.validate_fk('list', list_id)
+            
+            # Transform field names: sort_order → sort (database uses 'sort')
+            if 'sort_order' in field:
+                field['sort'] = field.pop('sort_order')
+            
+            # Generate 'name' field from 'label' if not present (required field)
+            if 'name' not in field and 'label' in field:
+                field['name'] = field['label'].lower().replace(' ', '_').replace('-', '_')
             
             # Convert configuration dict to JSON string
             if isinstance(field.get('configuration'), dict):

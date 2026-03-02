@@ -9,6 +9,7 @@ Expected count: ~16 custom statuses per RFC S2025_195201
 
 from base import BaseSeeder
 from config import Config
+import json
 
 
 class StatusSeeder(BaseSeeder):
@@ -29,6 +30,18 @@ class StatusSeeder(BaseSeeder):
         
         # Insert or update each status
         for status in statuses_data:
+            # Transform: move color, icon, and other properties into 'properties' JSON field
+            properties = {}
+            for prop in ['color', 'icon', 'color_hex', 'description']:
+                if prop in status:
+                    properties[prop] = status.pop(prop)
+            
+            # Store properties as JSON string if any properties exist
+            if properties:
+                status['properties'] = json.dumps(properties)
+            elif 'properties' not in status:
+                status['properties'] = json.dumps({})
+            
             self.insert_or_update(
                 table=self.table_name,
                 data=status,

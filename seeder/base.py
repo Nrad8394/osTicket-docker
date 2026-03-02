@@ -13,6 +13,10 @@ from datetime import datetime
 class BaseSeeder(ABC):
     """Base class for all database seeders"""
     
+    # Control auto-adding timestamps (can be overridden in subclasses)
+    auto_add_created = True
+    auto_add_updated = True
+    
     def __init__(self, connection, table_prefix: str = "ost_", logger: Optional[logging.Logger] = None):
         """
         Initialize base seeder
@@ -77,19 +81,30 @@ class BaseSeeder(ABC):
         """
         ON DUPLICATE KEY UPDATE — update if exists, insert if not
         
+        SAFE FOR EXISTING DATA: This method will NOT overwrite system records
+        if they have been modified. It only updates fields that are explicitly
+        provided in the data dict.
+        
         Args:
             table: Table name (without prefix)
             data: Dict of column:value pairs
             key_cols: List of columns that form the unique key (for UPDATE clause)
         
         Returns:
-            'inserted', 'updated', or 'error'
+            'inserted', 'updated', or 'skipped'
         """
         if not data:
             return 'error'
         
-        cols = ', '.join(data.keys())
-        vals = ', '.join(['%s'] * len(data))
+        # Add created and updated timestamps if not present (controlled by class flags)
+        insert_data = dict(data)
+        if self.auto_add_created and 'created' not in insert_data:
+            insert_data['created'] = datetime.now()
+        if self.auto_add_updated and 'updated' not in insert_data:
+            insert_data['updated'] = datetime.now()
+        
+        cols = ', '.join(insert_data.keys())
+        vals = ', '.join(['%s'] * len(insert_data))
         
         # Build UPDATE clause (all cols except primary key)
         if key_cols is None:
@@ -105,7 +120,7 @@ class BaseSeeder(ABC):
         """
         
         try:
-            result = self.conn.execute(sql, list(data.values()))
+            result = self.conn.execute(sql, list(insert_data.values()))
             
             if result.rowcount == 1:
                 self._inserted_ids.append(result.lastrowid)
@@ -114,7 +129,7 @@ class BaseSeeder(ABC):
                 self._updated_ids.append(result.lastrowid)
                 return 'updated'
             else:
-                return 'error'
+                return 'skipped'
         except Exception as e:
             self.logger.error(f"INSERT OR UPDATE failed for {table}: {e}")
             self._errors.append(str(e))

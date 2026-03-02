@@ -22,9 +22,9 @@ class Environment(Enum):
 
 class SeederMode(Enum):
     """Seeding operation modes"""
-    FULL = "full"           # Delete + re-seed all
-    PARTIAL = "partial"     # INSERT IGNORE (safe)
-    RESET = "reset"         # Delete seeded tables + re-seed
+    FULL = "full"           # INSERT/UPDATE all records (non-destructive)
+    PARTIAL = "partial"     # INSERT IGNORE (safe, skips duplicates)
+    RESET = "reset"         # Reserved for future use
     VALIDATE = "validate"   # Check only, don't modify
     ROLLBACK = "rollback"   # Restore from backup
 
@@ -82,15 +82,35 @@ class ConfigLoader:
     
     @staticmethod
     def load_env_file(path: str = ".env") -> Dict[str, str]:
-        """Load environment variables from .env file"""
+        """Load environment variables from .env file
+        
+        Attempts to load from:
+        1. Specified path (e.g., 'seeder/.env')
+        2. Parent directory fallback (e.g., '../.env') for centralized config
+        3. Returns empty dict if neither exists
+        """
         env_vars = {}
-        if os.path.exists(path):
-            with open(path, encoding='utf-8') as f:
-                for line in f:
-                    line = line.strip()
-                    if line and not line.startswith('#') and '=' in line:
-                        key, value = line.split('=', 1)
-                        env_vars[key.strip()] = value.strip().strip('"').strip("'")
+        
+        # Try primary path first
+        paths_to_try = [path]
+        
+        # Add parent directory fallback for centralized .env
+        if path == ".env":
+            parent_env = os.path.join('..', '.env')
+            paths_to_try.append(parent_env)
+        
+        for env_path in paths_to_try:
+            if os.path.exists(env_path):
+                with open(env_path, encoding='utf-8') as f:
+                    for line in f:
+                        line = line.strip()
+                        if line and not line.startswith('#') and '=' in line:
+                            key, value = line.split('=', 1)
+                            env_vars[key.strip()] = value.strip().strip('"').strip("'")
+                # Successfully loaded, don't try other paths
+                print(f"✓ Loaded configuration from: {env_path}")
+                break
+        
         return env_vars
     
     @staticmethod

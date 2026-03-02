@@ -262,9 +262,16 @@ class SeedingOrchestrator:
                     
                     if is_critical:
                         logger.critical(f"Critical seeder failed. Aborting remaining seeders.")
+                        connection.rollback()
                         self.end_time = datetime.now()
                         self._print_summary()
                         return False
+            
+            # Commit all changes
+            logger.info("")
+            logger.info("Committing all changes to database...")
+            connection.commit()
+            logger.info("[OK] All changes committed successfully")
             
             self.end_time = datetime.now()
             self._print_summary()
@@ -272,6 +279,8 @@ class SeedingOrchestrator:
         
         except Exception as e:
             logger.critical(f"Orchestration failed: {str(e)}")
+            logger.info("Rolling back all changes...")
+            connection.rollback()
             self.end_time = datetime.now()
             self._print_summary()
             return False
@@ -307,9 +316,9 @@ class SeedingOrchestrator:
         for step_name, result in self.results.items():
             status = result['status']
             if status == 'SUCCESS':
-                logger.info(f"✓ {step_name}: {result['message']}")
+                logger.info(f"[OK] {step_name}: {result['message']}")
             else:
-                logger.error(f"✗ {step_name}: {result.get('error', 'Unknown error')}")
+                logger.error(f"[FAIL] {step_name}: {result.get('error', 'Unknown error')}")
         
         logger.info("=" * 70)
         logger.info(f"End Time: {self.end_time}")
