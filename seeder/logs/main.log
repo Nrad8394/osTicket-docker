@@ -3587,3 +3587,1152 @@ AttributeError: module 'bcrypt' has no attribute '__about__'
 2026-03-02 13:24:29,198 - __main__ - INFO - ======================================================================
 2026-03-02 13:24:29,198 - __main__ - INFO - End Time: 2026-03-02 13:24:29.193717
 2026-03-02 13:24:29,198 - __main__ - INFO - ======================================================================
+2026-03-02 13:38:16,828 - __main__ - INFO - ======================================================================
+2026-03-02 13:38:16,828 - __main__ - INFO - OSTICKET SEEDING ORCHESTRATION STARTED
+2026-03-02 13:38:16,828 - __main__ - INFO - Start Time: 2026-03-02 13:38:16.828612
+2026-03-02 13:38:16,828 - __main__ - INFO - Demo Mode: False
+2026-03-02 13:38:16,828 - __main__ - INFO - ======================================================================
+2026-03-02 13:38:16,999 - connection - INFO - Database connection pool initialized successfully
+2026-03-02 13:38:17,000 - __main__ - INFO - Database connection established successfully
+2026-03-02 13:38:17,000 - __main__ - INFO - 
+2026-03-02 13:38:17,000 - __main__ - INFO - [1/12] Roles
+2026-03-02 13:38:17,000 - __main__ - INFO - Dependencies: None
+2026-03-02 13:38:17,000 - __main__ - INFO - Critical: True
+2026-03-02 13:38:17,000 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:38:17,016 - __main__ - INFO - [OK] Roles seeded successfully
+2026-03-02 13:38:17,016 - __main__ - INFO -   Inserted: 0, Updated: 10
+2026-03-02 13:38:17,016 - __main__ - INFO - 
+2026-03-02 13:38:17,017 - __main__ - INFO - [2/12] Departments
+2026-03-02 13:38:17,017 - __main__ - INFO - Dependencies: None
+2026-03-02 13:38:17,017 - __main__ - INFO - Critical: True
+2026-03-02 13:38:17,017 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:38:17,026 - __main__ - INFO - [OK] Departments seeded successfully
+2026-03-02 13:38:17,026 - __main__ - INFO -   Inserted: 0, Updated: 8
+2026-03-02 13:38:17,026 - __main__ - INFO - 
+2026-03-02 13:38:17,028 - __main__ - INFO - [3/12] SLAs
+2026-03-02 13:38:17,028 - __main__ - INFO - Dependencies: None
+2026-03-02 13:38:17,028 - __main__ - INFO - Critical: True
+2026-03-02 13:38:17,028 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:38:17,045 - __main__ - INFO - [OK] SLAs seeded successfully
+2026-03-02 13:38:17,045 - __main__ - INFO -   Inserted: 0, Updated: 10
+2026-03-02 13:38:17,045 - __main__ - INFO - 
+2026-03-02 13:38:17,045 - __main__ - INFO - [4/12] Teams
+2026-03-02 13:38:17,045 - __main__ - INFO - Dependencies: None
+2026-03-02 13:38:17,045 - __main__ - INFO - Critical: True
+2026-03-02 13:38:17,045 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:38:17,061 - __main__ - INFO - [OK] Teams seeded successfully
+2026-03-02 13:38:17,061 - __main__ - INFO -   Inserted: 0, Updated: 7
+2026-03-02 13:38:17,061 - __main__ - INFO - 
+2026-03-02 13:38:17,061 - __main__ - INFO - [5/12] Staff
+2026-03-02 13:38:17,061 - __main__ - INFO - Dependencies: Roles, Departments
+2026-03-02 13:38:17,061 - __main__ - INFO - Critical: True
+2026-03-02 13:38:17,061 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:38:17,077 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\karan\Downloads\github\osTicket-docker\seeder\.venv\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2026-03-02 13:38:20,205 - __main__ - INFO - [OK] Staff seeded successfully
+2026-03-02 13:38:20,205 - __main__ - INFO -   Inserted: 0, Updated: 11
+2026-03-02 13:38:20,205 - __main__ - INFO - 
+2026-03-02 13:38:20,205 - __main__ - INFO - [6/12] Lists
+2026-03-02 13:38:20,205 - __main__ - INFO - Dependencies: None
+2026-03-02 13:38:20,205 - __main__ - INFO - Critical: True
+2026-03-02 13:38:20,205 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:38:20,219 - __main__ - INFO - [OK] Lists seeded successfully
+2026-03-02 13:38:20,219 - __main__ - INFO -   Inserted: 0, Updated: 5
+2026-03-02 13:38:20,219 - __main__ - INFO - 
+2026-03-02 13:38:20,219 - __main__ - INFO - [7/12] List Items
+2026-03-02 13:38:20,219 - __main__ - INFO - Dependencies: Lists
+2026-03-02 13:38:20,219 - __main__ - INFO - Critical: True
+2026-03-02 13:38:20,219 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:38:20,226 - __main__ - INFO - [OK] List Items seeded successfully
+2026-03-02 13:38:20,226 - __main__ - INFO -   Inserted: 0, Updated: 0
+2026-03-02 13:38:20,226 - __main__ - INFO - 
+2026-03-02 13:38:20,226 - __main__ - INFO - [8/12] Form Fields
+2026-03-02 13:38:20,226 - __main__ - INFO - Dependencies: Lists
+2026-03-02 13:38:20,226 - __main__ - INFO - Critical: True
+2026-03-02 13:38:20,226 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:38:20,242 - __main__ - INFO - [OK] Form Fields seeded successfully
+2026-03-02 13:38:20,242 - __main__ - INFO -   Inserted: 0, Updated: 10
+2026-03-02 13:38:20,242 - __main__ - INFO - 
+2026-03-02 13:38:20,242 - __main__ - INFO - [9/12] Help Topics
+2026-03-02 13:38:20,242 - __main__ - INFO - Dependencies: Departments, Teams, SLAs
+2026-03-02 13:38:20,242 - __main__ - INFO - Critical: True
+2026-03-02 13:38:20,242 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:38:20,242 - base - INFO - Generating help topics...
+2026-03-02 13:38:20,247 - base - INFO - Generated 83 help topics
+2026-03-02 13:38:20,247 - base - INFO - [OK] All 83 topics validated successfully
+2026-03-02 13:38:20,248 - base - INFO - Inserting 83 help topics...
+2026-03-02 13:38:20,397 - base - INFO - [OK] Help topics seeding complete: 83 inserted, 0 updated
+2026-03-02 13:38:20,397 - __main__ - INFO - [OK] Help Topics seeded successfully
+2026-03-02 13:38:20,401 - __main__ - INFO -   Inserted: 83, Updated: 0
+2026-03-02 13:38:20,401 - __main__ - INFO - 
+2026-03-02 13:38:20,401 - __main__ - INFO - [10/12] Ticket Statuses
+2026-03-02 13:38:20,401 - __main__ - INFO - Dependencies: None
+2026-03-02 13:38:20,401 - __main__ - INFO - Critical: True
+2026-03-02 13:38:20,401 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:38:20,429 - __main__ - INFO - [OK] Ticket Statuses seeded successfully
+2026-03-02 13:38:20,429 - __main__ - INFO -   Inserted: 0, Updated: 16
+2026-03-02 13:38:20,429 - __main__ - INFO - 
+2026-03-02 13:38:20,429 - __main__ - INFO - [11/12] Filters
+2026-03-02 13:38:20,429 - __main__ - INFO - Dependencies: Help Topics
+2026-03-02 13:38:20,429 - __main__ - INFO - Critical: False
+2026-03-02 13:38:20,429 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:38:20,456 - __main__ - INFO - [OK] Filters seeded successfully
+2026-03-02 13:38:20,456 - __main__ - INFO -   Inserted: 0, Updated: 12
+2026-03-02 13:38:20,456 - __main__ - INFO - 
+2026-03-02 13:38:20,456 - __main__ - INFO - [12/12] Sequences
+2026-03-02 13:38:20,456 - __main__ - INFO - Dependencies: None
+2026-03-02 13:38:20,456 - __main__ - INFO - Critical: True
+2026-03-02 13:38:20,456 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:38:20,460 - __main__ - INFO - [OK] Sequences seeded successfully
+2026-03-02 13:38:20,460 - __main__ - INFO -   Inserted: 0, Updated: 2
+2026-03-02 13:38:20,461 - __main__ - INFO - 
+2026-03-02 13:38:20,461 - __main__ - INFO - Committing all changes to database...
+2026-03-02 13:38:20,471 - __main__ - INFO - [OK] All changes committed successfully
+2026-03-02 13:38:20,471 - __main__ - INFO - 
+2026-03-02 13:38:20,471 - __main__ - INFO - ======================================================================
+2026-03-02 13:38:20,471 - __main__ - INFO - SEEDING ORCHESTRATION SUMMARY
+2026-03-02 13:38:20,472 - __main__ - INFO - ======================================================================
+2026-03-02 13:38:20,472 - __main__ - INFO - Total Steps: 12
+2026-03-02 13:38:20,472 - __main__ - INFO - Successful: 12
+2026-03-02 13:38:20,472 - __main__ - INFO - Failed: 0
+2026-03-02 13:38:20,472 - __main__ - INFO - Total Records Inserted: 83
+2026-03-02 13:38:20,472 - __main__ - INFO - Total Records Updated: 91
+2026-03-02 13:38:20,472 - __main__ - INFO - Duration: 3.64 seconds
+2026-03-02 13:38:20,472 - __main__ - INFO - 
+2026-03-02 13:38:20,472 - __main__ - INFO - Detailed Results:
+2026-03-02 13:38:20,472 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:38:20,472 - __main__ - INFO - [OK] Roles: Seeding completed
+2026-03-02 13:38:20,472 - __main__ - INFO - [OK] Departments: Seeding completed
+2026-03-02 13:38:20,472 - __main__ - INFO - [OK] SLAs: Seeding completed
+2026-03-02 13:38:20,472 - __main__ - INFO - [OK] Teams: Seeding completed
+2026-03-02 13:38:20,472 - __main__ - INFO - [OK] Staff: Seeding completed
+2026-03-02 13:38:20,472 - __main__ - INFO - [OK] Lists: Seeding completed
+2026-03-02 13:38:20,472 - __main__ - INFO - [OK] List Items: Seeding completed
+2026-03-02 13:38:20,472 - __main__ - INFO - [OK] Form Fields: Seeding completed
+2026-03-02 13:38:20,472 - __main__ - INFO - [OK] Help Topics: Seeding completed
+2026-03-02 13:38:20,472 - __main__ - INFO - [OK] Ticket Statuses: Seeding completed
+2026-03-02 13:38:20,472 - __main__ - INFO - [OK] Filters: Seeding completed
+2026-03-02 13:38:20,474 - __main__ - INFO - [OK] Sequences: Seeding completed
+2026-03-02 13:38:20,474 - __main__ - INFO - ======================================================================
+2026-03-02 13:38:20,474 - __main__ - INFO - End Time: 2026-03-02 13:38:20.471019
+2026-03-02 13:38:20,474 - __main__ - INFO - ======================================================================
+2026-03-02 13:52:50,712 - __main__ - INFO - ======================================================================
+2026-03-02 13:52:50,712 - __main__ - INFO - OSTICKET SEEDING ORCHESTRATION STARTED
+2026-03-02 13:52:50,712 - __main__ - INFO - Start Time: 2026-03-02 13:52:50.712261
+2026-03-02 13:52:50,712 - __main__ - INFO - Demo Mode: False
+2026-03-02 13:52:50,713 - __main__ - INFO - ======================================================================
+2026-03-02 13:52:58,032 - connection - ERROR - Failed to initialize connection pool: 2005 (HY000): Unknown MySQL server host 'mysql' (11001)
+2026-03-02 13:52:58,032 - __main__ - CRITICAL - Failed to initialize database connection: 2005 (HY000): Unknown MySQL server host 'mysql' (11001)
+2026-03-02 13:53:50,777 - __main__ - INFO - ======================================================================
+2026-03-02 13:53:50,777 - __main__ - INFO - OSTICKET SEEDING ORCHESTRATION STARTED
+2026-03-02 13:53:50,777 - __main__ - INFO - Start Time: 2026-03-02 13:53:50.777512
+2026-03-02 13:53:50,777 - __main__ - INFO - Demo Mode: False
+2026-03-02 13:53:50,777 - __main__ - INFO - ======================================================================
+2026-03-02 13:53:53,552 - connection - ERROR - Failed to initialize connection pool: 2005 (HY000): Unknown MySQL server host 'mysql' (11001)
+2026-03-02 13:53:53,553 - __main__ - CRITICAL - Failed to initialize database connection: 2005 (HY000): Unknown MySQL server host 'mysql' (11001)
+2026-03-02 13:54:19,467 - __main__ - INFO - ======================================================================
+2026-03-02 13:54:19,467 - __main__ - INFO - OSTICKET SEEDING ORCHESTRATION STARTED
+2026-03-02 13:54:19,467 - __main__ - INFO - Start Time: 2026-03-02 13:54:19.467429
+2026-03-02 13:54:19,467 - __main__ - INFO - Demo Mode: False
+2026-03-02 13:54:19,467 - __main__ - INFO - ======================================================================
+2026-03-02 13:54:19,594 - connection - INFO - Database connection pool initialized successfully
+2026-03-02 13:54:19,595 - __main__ - INFO - Database connection established successfully
+2026-03-02 13:54:19,595 - __main__ - INFO - 
+2026-03-02 13:54:19,595 - __main__ - INFO - [1/12] Roles
+2026-03-02 13:54:19,595 - __main__ - INFO - Dependencies: None
+2026-03-02 13:54:19,595 - __main__ - INFO - Critical: True
+2026-03-02 13:54:19,595 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:54:19,612 - __main__ - INFO - [OK] Roles seeded successfully
+2026-03-02 13:54:19,612 - __main__ - INFO -   Inserted: 0, Updated: 10
+2026-03-02 13:54:19,612 - __main__ - INFO - 
+2026-03-02 13:54:19,612 - __main__ - INFO - [2/12] Departments
+2026-03-02 13:54:19,612 - __main__ - INFO - Dependencies: None
+2026-03-02 13:54:19,612 - __main__ - INFO - Critical: True
+2026-03-02 13:54:19,612 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:54:19,626 - __main__ - INFO - [OK] Departments seeded successfully
+2026-03-02 13:54:19,627 - __main__ - INFO -   Inserted: 0, Updated: 8
+2026-03-02 13:54:19,627 - __main__ - INFO - 
+2026-03-02 13:54:19,627 - __main__ - INFO - [3/12] SLAs
+2026-03-02 13:54:19,627 - __main__ - INFO - Dependencies: None
+2026-03-02 13:54:19,627 - __main__ - INFO - Critical: True
+2026-03-02 13:54:19,628 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:54:19,644 - __main__ - INFO - [OK] SLAs seeded successfully
+2026-03-02 13:54:19,644 - __main__ - INFO -   Inserted: 0, Updated: 10
+2026-03-02 13:54:19,644 - __main__ - INFO - 
+2026-03-02 13:54:19,644 - __main__ - INFO - [4/12] Teams
+2026-03-02 13:54:19,644 - __main__ - INFO - Dependencies: None
+2026-03-02 13:54:19,644 - __main__ - INFO - Critical: True
+2026-03-02 13:54:19,644 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:54:19,661 - __main__ - INFO - [OK] Teams seeded successfully
+2026-03-02 13:54:19,661 - __main__ - INFO -   Inserted: 0, Updated: 7
+2026-03-02 13:54:19,661 - __main__ - INFO - 
+2026-03-02 13:54:19,661 - __main__ - INFO - [5/12] Staff
+2026-03-02 13:54:19,662 - __main__ - INFO - Dependencies: Roles, Departments
+2026-03-02 13:54:19,662 - __main__ - INFO - Critical: True
+2026-03-02 13:54:19,662 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:54:19,668 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\karan\Downloads\github\osTicket-docker\seeder\.venv\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2026-03-02 13:54:23,698 - __main__ - INFO - [OK] Staff seeded successfully
+2026-03-02 13:54:23,700 - __main__ - INFO -   Inserted: 0, Updated: 11
+2026-03-02 13:54:23,700 - __main__ - INFO - 
+2026-03-02 13:54:23,700 - __main__ - INFO - [6/12] Lists
+2026-03-02 13:54:23,701 - __main__ - INFO - Dependencies: None
+2026-03-02 13:54:23,701 - __main__ - INFO - Critical: True
+2026-03-02 13:54:23,701 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:54:23,714 - __main__ - INFO - [OK] Lists seeded successfully
+2026-03-02 13:54:23,714 - __main__ - INFO -   Inserted: 0, Updated: 5
+2026-03-02 13:54:23,716 - __main__ - INFO - 
+2026-03-02 13:54:23,716 - __main__ - INFO - [7/12] List Items
+2026-03-02 13:54:23,716 - __main__ - INFO - Dependencies: Lists
+2026-03-02 13:54:23,717 - __main__ - INFO - Critical: True
+2026-03-02 13:54:23,718 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:54:23,726 - __main__ - INFO - [OK] List Items seeded successfully
+2026-03-02 13:54:23,726 - __main__ - INFO -   Inserted: 0, Updated: 0
+2026-03-02 13:54:23,726 - __main__ - INFO - 
+2026-03-02 13:54:23,727 - __main__ - INFO - [8/12] Form Fields
+2026-03-02 13:54:23,727 - __main__ - INFO - Dependencies: Lists
+2026-03-02 13:54:23,727 - __main__ - INFO - Critical: True
+2026-03-02 13:54:23,727 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:54:23,748 - __main__ - INFO - [OK] Form Fields seeded successfully
+2026-03-02 13:54:23,748 - __main__ - INFO -   Inserted: 0, Updated: 10
+2026-03-02 13:54:23,748 - __main__ - INFO - 
+2026-03-02 13:54:23,748 - __main__ - INFO - [9/12] Help Topics
+2026-03-02 13:54:23,748 - __main__ - INFO - Dependencies: Departments, Teams, SLAs
+2026-03-02 13:54:23,748 - __main__ - INFO - Critical: True
+2026-03-02 13:54:23,748 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:54:23,748 - base - INFO - Generating help topics...
+2026-03-02 13:54:23,748 - base - INFO - Generated 83 help topics
+2026-03-02 13:54:23,748 - base - INFO - [OK] All 83 topics validated successfully
+2026-03-02 13:54:23,748 - base - INFO - Inserting 83 help topics...
+2026-03-02 13:54:23,900 - base - INFO - [OK] Help topics seeding complete: 83 inserted, 0 updated
+2026-03-02 13:54:23,925 - __main__ - INFO - [OK] Help Topics seeded successfully
+2026-03-02 13:54:23,926 - __main__ - INFO -   Inserted: 83, Updated: 0
+2026-03-02 13:54:23,963 - __main__ - INFO - 
+2026-03-02 13:54:23,971 - __main__ - INFO - [10/12] Ticket Statuses
+2026-03-02 13:54:24,001 - __main__ - INFO - Dependencies: None
+2026-03-02 13:54:24,002 - __main__ - INFO - Critical: True
+2026-03-02 13:54:24,003 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:54:24,037 - __main__ - INFO - [OK] Ticket Statuses seeded successfully
+2026-03-02 13:54:24,045 - __main__ - INFO -   Inserted: 0, Updated: 16
+2026-03-02 13:54:24,045 - __main__ - INFO - 
+2026-03-02 13:54:24,046 - __main__ - INFO - [11/12] Filters
+2026-03-02 13:54:24,046 - __main__ - INFO - Dependencies: Help Topics
+2026-03-02 13:54:24,046 - __main__ - INFO - Critical: False
+2026-03-02 13:54:24,046 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:54:24,064 - __main__ - INFO - [OK] Filters seeded successfully
+2026-03-02 13:54:24,064 - __main__ - INFO -   Inserted: 0, Updated: 12
+2026-03-02 13:54:24,064 - __main__ - INFO - 
+2026-03-02 13:54:24,066 - __main__ - INFO - [12/12] Sequences
+2026-03-02 13:54:24,066 - __main__ - INFO - Dependencies: None
+2026-03-02 13:54:24,066 - __main__ - INFO - Critical: True
+2026-03-02 13:54:24,066 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:54:24,071 - __main__ - INFO - [OK] Sequences seeded successfully
+2026-03-02 13:54:24,071 - __main__ - INFO -   Inserted: 0, Updated: 2
+2026-03-02 13:54:24,071 - __main__ - INFO - 
+2026-03-02 13:54:24,071 - __main__ - INFO - Committing all changes to database...
+2026-03-02 13:54:24,079 - __main__ - INFO - [OK] All changes committed successfully
+2026-03-02 13:54:24,079 - __main__ - INFO - 
+2026-03-02 13:54:24,079 - __main__ - INFO - ======================================================================
+2026-03-02 13:54:24,079 - __main__ - INFO - SEEDING ORCHESTRATION SUMMARY
+2026-03-02 13:54:24,081 - __main__ - INFO - ======================================================================
+2026-03-02 13:54:24,081 - __main__ - INFO - Total Steps: 12
+2026-03-02 13:54:24,081 - __main__ - INFO - Successful: 12
+2026-03-02 13:54:24,081 - __main__ - INFO - Failed: 0
+2026-03-02 13:54:24,081 - __main__ - INFO - Total Records Inserted: 83
+2026-03-02 13:54:24,081 - __main__ - INFO - Total Records Updated: 91
+2026-03-02 13:54:24,081 - __main__ - INFO - Duration: 4.61 seconds
+2026-03-02 13:54:24,081 - __main__ - INFO - 
+2026-03-02 13:54:24,081 - __main__ - INFO - Detailed Results:
+2026-03-02 13:54:24,081 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:54:24,081 - __main__ - INFO - [OK] Roles: Seeding completed
+2026-03-02 13:54:24,081 - __main__ - INFO - [OK] Departments: Seeding completed
+2026-03-02 13:54:24,083 - __main__ - INFO - [OK] SLAs: Seeding completed
+2026-03-02 13:54:24,083 - __main__ - INFO - [OK] Teams: Seeding completed
+2026-03-02 13:54:24,083 - __main__ - INFO - [OK] Staff: Seeding completed
+2026-03-02 13:54:24,083 - __main__ - INFO - [OK] Lists: Seeding completed
+2026-03-02 13:54:24,084 - __main__ - INFO - [OK] List Items: Seeding completed
+2026-03-02 13:54:24,084 - __main__ - INFO - [OK] Form Fields: Seeding completed
+2026-03-02 13:54:24,084 - __main__ - INFO - [OK] Help Topics: Seeding completed
+2026-03-02 13:54:24,084 - __main__ - INFO - [OK] Ticket Statuses: Seeding completed
+2026-03-02 13:54:24,084 - __main__ - INFO - [OK] Filters: Seeding completed
+2026-03-02 13:54:24,084 - __main__ - INFO - [OK] Sequences: Seeding completed
+2026-03-02 13:54:24,084 - __main__ - INFO - ======================================================================
+2026-03-02 13:54:24,084 - __main__ - INFO - End Time: 2026-03-02 13:54:24.079415
+2026-03-02 13:54:24,084 - __main__ - INFO - ======================================================================
+2026-03-02 13:59:37,681 - __main__ - INFO - ======================================================================
+2026-03-02 13:59:37,682 - __main__ - INFO - OSTICKET SEEDING ORCHESTRATION STARTED
+2026-03-02 13:59:37,682 - __main__ - INFO - Start Time: 2026-03-02 13:59:37.681867
+2026-03-02 13:59:37,683 - __main__ - INFO - Demo Mode: False
+2026-03-02 13:59:37,683 - __main__ - INFO - ======================================================================
+2026-03-02 13:59:37,843 - connection - INFO - Database connection pool initialized successfully
+2026-03-02 13:59:37,845 - __main__ - INFO - Database connection established successfully
+2026-03-02 13:59:37,846 - __main__ - INFO - 
+2026-03-02 13:59:37,846 - __main__ - INFO - [1/13] Roles
+2026-03-02 13:59:37,846 - __main__ - INFO - Dependencies: None
+2026-03-02 13:59:37,846 - __main__ - INFO - Critical: True
+2026-03-02 13:59:37,846 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:59:37,864 - __main__ - INFO - [OK] Roles seeded successfully
+2026-03-02 13:59:37,864 - __main__ - INFO -   Inserted: 0, Updated: 10
+2026-03-02 13:59:37,864 - __main__ - INFO - 
+2026-03-02 13:59:37,864 - __main__ - INFO - [2/13] Departments
+2026-03-02 13:59:37,864 - __main__ - INFO - Dependencies: None
+2026-03-02 13:59:37,864 - __main__ - INFO - Critical: True
+2026-03-02 13:59:37,864 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:59:37,882 - __main__ - INFO - [OK] Departments seeded successfully
+2026-03-02 13:59:37,882 - __main__ - INFO -   Inserted: 0, Updated: 8
+2026-03-02 13:59:37,883 - __main__ - INFO - 
+2026-03-02 13:59:37,883 - __main__ - INFO - [3/13] SLAs
+2026-03-02 13:59:37,883 - __main__ - INFO - Dependencies: None
+2026-03-02 13:59:37,883 - __main__ - INFO - Critical: True
+2026-03-02 13:59:37,883 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:59:37,899 - __main__ - INFO - [OK] SLAs seeded successfully
+2026-03-02 13:59:37,899 - __main__ - INFO -   Inserted: 0, Updated: 10
+2026-03-02 13:59:37,899 - __main__ - INFO - 
+2026-03-02 13:59:37,900 - __main__ - INFO - [4/13] Teams
+2026-03-02 13:59:37,900 - __main__ - INFO - Dependencies: None
+2026-03-02 13:59:37,900 - __main__ - INFO - Critical: True
+2026-03-02 13:59:37,900 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:59:37,909 - __main__ - INFO - [OK] Teams seeded successfully
+2026-03-02 13:59:37,909 - __main__ - INFO -   Inserted: 0, Updated: 7
+2026-03-02 13:59:37,911 - __main__ - INFO - 
+2026-03-02 13:59:37,911 - __main__ - INFO - [5/13] Staff
+2026-03-02 13:59:37,911 - __main__ - INFO - Dependencies: Roles, Departments
+2026-03-02 13:59:37,912 - __main__ - INFO - Critical: True
+2026-03-02 13:59:37,912 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:59:37,918 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\karan\Downloads\github\osTicket-docker\seeder\.venv\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2026-03-02 13:59:41,302 - __main__ - INFO - [OK] Staff seeded successfully
+2026-03-02 13:59:41,302 - __main__ - INFO -   Inserted: 0, Updated: 11
+2026-03-02 13:59:41,304 - __main__ - INFO - 
+2026-03-02 13:59:41,304 - __main__ - INFO - [6/13] Lists
+2026-03-02 13:59:41,304 - __main__ - INFO - Dependencies: None
+2026-03-02 13:59:41,304 - __main__ - INFO - Critical: True
+2026-03-02 13:59:41,304 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:59:41,312 - __main__ - INFO - [OK] Lists seeded successfully
+2026-03-02 13:59:41,312 - __main__ - INFO -   Inserted: 0, Updated: 5
+2026-03-02 13:59:41,312 - __main__ - INFO - 
+2026-03-02 13:59:41,312 - __main__ - INFO - [7/13] List Items
+2026-03-02 13:59:41,313 - __main__ - INFO - Dependencies: Lists
+2026-03-02 13:59:41,313 - __main__ - INFO - Critical: True
+2026-03-02 13:59:41,313 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:59:41,320 - __main__ - INFO - [OK] List Items seeded successfully
+2026-03-02 13:59:41,320 - __main__ - INFO -   Inserted: 0, Updated: 0
+2026-03-02 13:59:41,320 - __main__ - INFO - 
+2026-03-02 13:59:41,320 - __main__ - INFO - [8/13] Form Fields
+2026-03-02 13:59:41,320 - __main__ - INFO - Dependencies: Lists
+2026-03-02 13:59:41,322 - __main__ - INFO - Critical: True
+2026-03-02 13:59:41,322 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:59:41,343 - __main__ - INFO - [OK] Form Fields seeded successfully
+2026-03-02 13:59:41,343 - __main__ - INFO -   Inserted: 0, Updated: 10
+2026-03-02 13:59:41,343 - __main__ - INFO - 
+2026-03-02 13:59:41,343 - __main__ - INFO - [9/13] Help Topics
+2026-03-02 13:59:41,343 - __main__ - INFO - Dependencies: Departments, Teams, SLAs
+2026-03-02 13:59:41,343 - __main__ - INFO - Critical: True
+2026-03-02 13:59:41,344 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:59:41,344 - base - INFO - Generating help topics...
+2026-03-02 13:59:41,344 - base - INFO - Generated 83 help topics
+2026-03-02 13:59:41,344 - base - INFO - [OK] All 83 topics validated successfully
+2026-03-02 13:59:41,344 - base - INFO - Inserting 83 help topics...
+2026-03-02 13:59:41,474 - base - INFO - [OK] Help topics seeding complete: 83 inserted, 0 updated
+2026-03-02 13:59:41,474 - __main__ - INFO - [OK] Help Topics seeded successfully
+2026-03-02 13:59:41,474 - __main__ - INFO -   Inserted: 83, Updated: 0
+2026-03-02 13:59:41,474 - __main__ - INFO - 
+2026-03-02 13:59:41,474 - __main__ - INFO - [10/13] Help Topic Forms
+2026-03-02 13:59:41,474 - __main__ - INFO - Dependencies: Help Topics
+2026-03-02 13:59:41,474 - __main__ - INFO - Critical: True
+2026-03-02 13:59:41,474 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:59:41,474 - base - INFO - Assigning forms to help topics...
+2026-03-02 13:59:41,474 - base - ERROR - Help topic forms seeding failed: 'DatabaseConnection' object has no attribute 'query'
+2026-03-02 13:59:41,474 - __main__ - INFO - [OK] Help Topic Forms seeded successfully
+2026-03-02 13:59:41,474 - __main__ - INFO -   Inserted: 0, Updated: 0
+2026-03-02 13:59:41,474 - __main__ - INFO - 
+2026-03-02 13:59:41,474 - __main__ - INFO - [11/13] Ticket Statuses
+2026-03-02 13:59:41,474 - __main__ - INFO - Dependencies: None
+2026-03-02 13:59:41,474 - __main__ - INFO - Critical: True
+2026-03-02 13:59:41,474 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:59:41,502 - __main__ - INFO - [OK] Ticket Statuses seeded successfully
+2026-03-02 13:59:41,502 - __main__ - INFO -   Inserted: 0, Updated: 16
+2026-03-02 13:59:41,503 - __main__ - INFO - 
+2026-03-02 13:59:41,503 - __main__ - INFO - [12/13] Filters
+2026-03-02 13:59:41,503 - __main__ - INFO - Dependencies: Help Topics
+2026-03-02 13:59:41,503 - __main__ - INFO - Critical: False
+2026-03-02 13:59:41,503 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:59:41,520 - __main__ - INFO - [OK] Filters seeded successfully
+2026-03-02 13:59:41,520 - __main__ - INFO -   Inserted: 0, Updated: 12
+2026-03-02 13:59:41,520 - __main__ - INFO - 
+2026-03-02 13:59:41,520 - __main__ - INFO - [13/13] Sequences
+2026-03-02 13:59:41,520 - __main__ - INFO - Dependencies: None
+2026-03-02 13:59:41,520 - __main__ - INFO - Critical: True
+2026-03-02 13:59:41,520 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:59:41,523 - __main__ - INFO - [OK] Sequences seeded successfully
+2026-03-02 13:59:41,525 - __main__ - INFO -   Inserted: 0, Updated: 2
+2026-03-02 13:59:41,525 - __main__ - INFO - 
+2026-03-02 13:59:41,526 - __main__ - INFO - Committing all changes to database...
+2026-03-02 13:59:41,532 - __main__ - INFO - [OK] All changes committed successfully
+2026-03-02 13:59:41,533 - __main__ - INFO - 
+2026-03-02 13:59:41,533 - __main__ - INFO - ======================================================================
+2026-03-02 13:59:41,533 - __main__ - INFO - SEEDING ORCHESTRATION SUMMARY
+2026-03-02 13:59:41,533 - __main__ - INFO - ======================================================================
+2026-03-02 13:59:41,533 - __main__ - INFO - Total Steps: 13
+2026-03-02 13:59:41,534 - __main__ - INFO - Successful: 13
+2026-03-02 13:59:41,534 - __main__ - INFO - Failed: 0
+2026-03-02 13:59:41,534 - __main__ - INFO - Total Records Inserted: 83
+2026-03-02 13:59:41,534 - __main__ - INFO - Total Records Updated: 91
+2026-03-02 13:59:41,534 - __main__ - INFO - Duration: 3.85 seconds
+2026-03-02 13:59:41,534 - __main__ - INFO - 
+2026-03-02 13:59:41,535 - __main__ - INFO - Detailed Results:
+2026-03-02 13:59:41,535 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 13:59:41,535 - __main__ - INFO - [OK] Roles: Seeding completed
+2026-03-02 13:59:41,535 - __main__ - INFO - [OK] Departments: Seeding completed
+2026-03-02 13:59:41,535 - __main__ - INFO - [OK] SLAs: Seeding completed
+2026-03-02 13:59:41,535 - __main__ - INFO - [OK] Teams: Seeding completed
+2026-03-02 13:59:41,535 - __main__ - INFO - [OK] Staff: Seeding completed
+2026-03-02 13:59:41,535 - __main__ - INFO - [OK] Lists: Seeding completed
+2026-03-02 13:59:41,535 - __main__ - INFO - [OK] List Items: Seeding completed
+2026-03-02 13:59:41,535 - __main__ - INFO - [OK] Form Fields: Seeding completed
+2026-03-02 13:59:41,535 - __main__ - INFO - [OK] Help Topics: Seeding completed
+2026-03-02 13:59:41,535 - __main__ - INFO - [OK] Help Topic Forms: Seeding completed
+2026-03-02 13:59:41,536 - __main__ - INFO - [OK] Ticket Statuses: Seeding completed
+2026-03-02 13:59:41,536 - __main__ - INFO - [OK] Filters: Seeding completed
+2026-03-02 13:59:41,536 - __main__ - INFO - [OK] Sequences: Seeding completed
+2026-03-02 13:59:41,536 - __main__ - INFO - ======================================================================
+2026-03-02 13:59:41,536 - __main__ - INFO - End Time: 2026-03-02 13:59:41.532842
+2026-03-02 13:59:41,536 - __main__ - INFO - ======================================================================
+2026-03-02 14:00:36,657 - __main__ - INFO - ======================================================================
+2026-03-02 14:00:36,657 - __main__ - INFO - OSTICKET SEEDING ORCHESTRATION STARTED
+2026-03-02 14:00:36,657 - __main__ - INFO - Start Time: 2026-03-02 14:00:36.657929
+2026-03-02 14:00:36,657 - __main__ - INFO - Demo Mode: False
+2026-03-02 14:00:36,657 - __main__ - INFO - ======================================================================
+2026-03-02 14:00:36,775 - connection - INFO - Database connection pool initialized successfully
+2026-03-02 14:00:36,775 - __main__ - INFO - Database connection established successfully
+2026-03-02 14:00:36,775 - __main__ - INFO - 
+2026-03-02 14:00:36,775 - __main__ - INFO - [1/13] Roles
+2026-03-02 14:00:36,777 - __main__ - INFO - Dependencies: None
+2026-03-02 14:00:36,777 - __main__ - INFO - Critical: True
+2026-03-02 14:00:36,777 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:00:36,789 - __main__ - INFO - [OK] Roles seeded successfully
+2026-03-02 14:00:36,789 - __main__ - INFO -   Inserted: 0, Updated: 10
+2026-03-02 14:00:36,789 - __main__ - INFO - 
+2026-03-02 14:00:36,789 - __main__ - INFO - [2/13] Departments
+2026-03-02 14:00:36,791 - __main__ - INFO - Dependencies: None
+2026-03-02 14:00:36,791 - __main__ - INFO - Critical: True
+2026-03-02 14:00:36,791 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:00:36,799 - __main__ - INFO - [OK] Departments seeded successfully
+2026-03-02 14:00:36,799 - __main__ - INFO -   Inserted: 0, Updated: 8
+2026-03-02 14:00:36,799 - __main__ - INFO - 
+2026-03-02 14:00:36,799 - __main__ - INFO - [3/13] SLAs
+2026-03-02 14:00:36,799 - __main__ - INFO - Dependencies: None
+2026-03-02 14:00:36,799 - __main__ - INFO - Critical: True
+2026-03-02 14:00:36,799 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:00:36,813 - __main__ - INFO - [OK] SLAs seeded successfully
+2026-03-02 14:00:36,813 - __main__ - INFO -   Inserted: 0, Updated: 10
+2026-03-02 14:00:36,813 - __main__ - INFO - 
+2026-03-02 14:00:36,813 - __main__ - INFO - [4/13] Teams
+2026-03-02 14:00:36,813 - __main__ - INFO - Dependencies: None
+2026-03-02 14:00:36,813 - __main__ - INFO - Critical: True
+2026-03-02 14:00:36,813 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:00:36,825 - __main__ - INFO - [OK] Teams seeded successfully
+2026-03-02 14:00:36,825 - __main__ - INFO -   Inserted: 0, Updated: 7
+2026-03-02 14:00:36,825 - __main__ - INFO - 
+2026-03-02 14:00:36,825 - __main__ - INFO - [5/13] Staff
+2026-03-02 14:00:36,825 - __main__ - INFO - Dependencies: Roles, Departments
+2026-03-02 14:00:36,825 - __main__ - INFO - Critical: True
+2026-03-02 14:00:36,825 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:00:36,832 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\karan\Downloads\github\osTicket-docker\seeder\.venv\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2026-03-02 14:00:41,175 - __main__ - INFO - [OK] Staff seeded successfully
+2026-03-02 14:00:41,175 - __main__ - INFO -   Inserted: 0, Updated: 11
+2026-03-02 14:00:41,175 - __main__ - INFO - 
+2026-03-02 14:00:41,176 - __main__ - INFO - [6/13] Lists
+2026-03-02 14:00:41,176 - __main__ - INFO - Dependencies: None
+2026-03-02 14:00:41,176 - __main__ - INFO - Critical: True
+2026-03-02 14:00:41,177 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:00:41,192 - __main__ - INFO - [OK] Lists seeded successfully
+2026-03-02 14:00:41,192 - __main__ - INFO -   Inserted: 0, Updated: 5
+2026-03-02 14:00:41,192 - __main__ - INFO - 
+2026-03-02 14:00:41,192 - __main__ - INFO - [7/13] List Items
+2026-03-02 14:00:41,192 - __main__ - INFO - Dependencies: Lists
+2026-03-02 14:00:41,192 - __main__ - INFO - Critical: True
+2026-03-02 14:00:41,192 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:00:41,204 - __main__ - INFO - [OK] List Items seeded successfully
+2026-03-02 14:00:41,204 - __main__ - INFO -   Inserted: 0, Updated: 0
+2026-03-02 14:00:41,204 - __main__ - INFO - 
+2026-03-02 14:00:41,206 - __main__ - INFO - [8/13] Form Fields
+2026-03-02 14:00:41,206 - __main__ - INFO - Dependencies: Lists
+2026-03-02 14:00:41,206 - __main__ - INFO - Critical: True
+2026-03-02 14:00:41,206 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:00:41,240 - __main__ - INFO - [OK] Form Fields seeded successfully
+2026-03-02 14:00:41,241 - __main__ - INFO -   Inserted: 0, Updated: 10
+2026-03-02 14:00:41,241 - __main__ - INFO - 
+2026-03-02 14:00:41,241 - __main__ - INFO - [9/13] Help Topics
+2026-03-02 14:00:41,241 - __main__ - INFO - Dependencies: Departments, Teams, SLAs
+2026-03-02 14:00:41,242 - __main__ - INFO - Critical: True
+2026-03-02 14:00:41,242 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:00:41,242 - base - INFO - Generating help topics...
+2026-03-02 14:00:41,270 - base - INFO - Generated 83 help topics
+2026-03-02 14:00:41,271 - base - INFO - [OK] All 83 topics validated successfully
+2026-03-02 14:00:41,272 - base - INFO - Inserting 83 help topics...
+2026-03-02 14:00:41,455 - base - INFO - [OK] Help topics seeding complete: 83 inserted, 0 updated
+2026-03-02 14:00:41,458 - __main__ - INFO - [OK] Help Topics seeded successfully
+2026-03-02 14:00:41,458 - __main__ - INFO -   Inserted: 83, Updated: 0
+2026-03-02 14:00:41,458 - __main__ - INFO - 
+2026-03-02 14:00:41,458 - __main__ - INFO - [10/13] Help Topic Forms
+2026-03-02 14:00:41,459 - __main__ - INFO - Dependencies: Help Topics
+2026-03-02 14:00:41,459 - __main__ - INFO - Critical: True
+2026-03-02 14:00:41,459 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:00:41,460 - base - INFO - Assigning forms to help topics...
+2026-03-02 14:00:41,460 - base - INFO - Found 58 public help topics
+2026-03-02 14:00:41,473 - connection - ERROR - Query execution failed: 1146 (42S02): Table 'osticket.ost_help_topic_hasform' doesn't exist
+2026-03-02 14:00:41,473 - connection - ERROR - Query: 
+                    INSERT INTO ost_help_topic_hasform (topic_id, form_id)
+                    VALUES (%s, %s)
+                    ON DUPLICATE KEY UPDATE form_id=VALUES(form_id)
+                
+2026-03-02 14:00:41,474 - base - ERROR - Help topic forms seeding failed: 1146 (42S02): Table 'osticket.ost_help_topic_hasform' doesn't exist
+2026-03-02 14:00:41,474 - __main__ - INFO - [OK] Help Topic Forms seeded successfully
+2026-03-02 14:00:41,474 - __main__ - INFO -   Inserted: 0, Updated: 0
+2026-03-02 14:00:41,475 - __main__ - INFO - 
+2026-03-02 14:00:41,475 - __main__ - INFO - [11/13] Ticket Statuses
+2026-03-02 14:00:41,475 - __main__ - INFO - Dependencies: None
+2026-03-02 14:00:41,475 - __main__ - INFO - Critical: True
+2026-03-02 14:00:41,475 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:00:41,506 - __main__ - INFO - [OK] Ticket Statuses seeded successfully
+2026-03-02 14:00:41,508 - __main__ - INFO -   Inserted: 0, Updated: 16
+2026-03-02 14:00:41,508 - __main__ - INFO - 
+2026-03-02 14:00:41,508 - __main__ - INFO - [12/13] Filters
+2026-03-02 14:00:41,508 - __main__ - INFO - Dependencies: Help Topics
+2026-03-02 14:00:41,508 - __main__ - INFO - Critical: False
+2026-03-02 14:00:41,508 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:00:41,529 - __main__ - INFO - [OK] Filters seeded successfully
+2026-03-02 14:00:41,529 - __main__ - INFO -   Inserted: 0, Updated: 12
+2026-03-02 14:00:41,529 - __main__ - INFO - 
+2026-03-02 14:00:41,529 - __main__ - INFO - [13/13] Sequences
+2026-03-02 14:00:41,530 - __main__ - INFO - Dependencies: None
+2026-03-02 14:00:41,530 - __main__ - INFO - Critical: True
+2026-03-02 14:00:41,530 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:00:41,534 - __main__ - INFO - [OK] Sequences seeded successfully
+2026-03-02 14:00:41,536 - __main__ - INFO -   Inserted: 0, Updated: 2
+2026-03-02 14:00:41,536 - __main__ - INFO - 
+2026-03-02 14:00:41,536 - __main__ - INFO - Committing all changes to database...
+2026-03-02 14:00:41,544 - __main__ - INFO - [OK] All changes committed successfully
+2026-03-02 14:00:41,544 - __main__ - INFO - 
+2026-03-02 14:00:41,544 - __main__ - INFO - ======================================================================
+2026-03-02 14:00:41,544 - __main__ - INFO - SEEDING ORCHESTRATION SUMMARY
+2026-03-02 14:00:41,544 - __main__ - INFO - ======================================================================
+2026-03-02 14:00:41,544 - __main__ - INFO - Total Steps: 13
+2026-03-02 14:00:41,544 - __main__ - INFO - Successful: 13
+2026-03-02 14:00:41,546 - __main__ - INFO - Failed: 0
+2026-03-02 14:00:41,546 - __main__ - INFO - Total Records Inserted: 83
+2026-03-02 14:00:41,546 - __main__ - INFO - Total Records Updated: 91
+2026-03-02 14:00:41,546 - __main__ - INFO - Duration: 4.89 seconds
+2026-03-02 14:00:41,546 - __main__ - INFO - 
+2026-03-02 14:00:41,546 - __main__ - INFO - Detailed Results:
+2026-03-02 14:00:41,547 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:00:41,547 - __main__ - INFO - [OK] Roles: Seeding completed
+2026-03-02 14:00:41,547 - __main__ - INFO - [OK] Departments: Seeding completed
+2026-03-02 14:00:41,547 - __main__ - INFO - [OK] SLAs: Seeding completed
+2026-03-02 14:00:41,547 - __main__ - INFO - [OK] Teams: Seeding completed
+2026-03-02 14:00:41,548 - __main__ - INFO - [OK] Staff: Seeding completed
+2026-03-02 14:00:41,548 - __main__ - INFO - [OK] Lists: Seeding completed
+2026-03-02 14:00:41,548 - __main__ - INFO - [OK] List Items: Seeding completed
+2026-03-02 14:00:41,548 - __main__ - INFO - [OK] Form Fields: Seeding completed
+2026-03-02 14:00:41,548 - __main__ - INFO - [OK] Help Topics: Seeding completed
+2026-03-02 14:00:41,548 - __main__ - INFO - [OK] Help Topic Forms: Seeding completed
+2026-03-02 14:00:41,550 - __main__ - INFO - [OK] Ticket Statuses: Seeding completed
+2026-03-02 14:00:41,550 - __main__ - INFO - [OK] Filters: Seeding completed
+2026-03-02 14:00:41,550 - __main__ - INFO - [OK] Sequences: Seeding completed
+2026-03-02 14:00:41,550 - __main__ - INFO - ======================================================================
+2026-03-02 14:00:41,550 - __main__ - INFO - End Time: 2026-03-02 14:00:41.544299
+2026-03-02 14:00:41,550 - __main__ - INFO - ======================================================================
+2026-03-02 14:03:49,924 - __main__ - INFO - ======================================================================
+2026-03-02 14:03:49,924 - __main__ - INFO - OSTICKET SEEDING ORCHESTRATION STARTED
+2026-03-02 14:03:49,924 - __main__ - INFO - Start Time: 2026-03-02 14:03:49.924820
+2026-03-02 14:03:49,925 - __main__ - INFO - Demo Mode: False
+2026-03-02 14:03:49,925 - __main__ - INFO - ======================================================================
+2026-03-02 14:03:50,038 - connection - INFO - Database connection pool initialized successfully
+2026-03-02 14:03:50,038 - __main__ - INFO - Database connection established successfully
+2026-03-02 14:03:50,039 - __main__ - INFO - 
+2026-03-02 14:03:50,039 - __main__ - INFO - [1/13] Roles
+2026-03-02 14:03:50,039 - __main__ - INFO - Dependencies: None
+2026-03-02 14:03:50,039 - __main__ - INFO - Critical: True
+2026-03-02 14:03:50,039 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:03:50,056 - __main__ - INFO - [OK] Roles seeded successfully
+2026-03-02 14:03:50,056 - __main__ - INFO -   Inserted: 0, Updated: 10
+2026-03-02 14:03:50,056 - __main__ - INFO - 
+2026-03-02 14:03:50,056 - __main__ - INFO - [2/13] Departments
+2026-03-02 14:03:50,056 - __main__ - INFO - Dependencies: None
+2026-03-02 14:03:50,056 - __main__ - INFO - Critical: True
+2026-03-02 14:03:50,056 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:03:50,071 - __main__ - INFO - [OK] Departments seeded successfully
+2026-03-02 14:03:50,071 - __main__ - INFO -   Inserted: 0, Updated: 8
+2026-03-02 14:03:50,071 - __main__ - INFO - 
+2026-03-02 14:03:50,071 - __main__ - INFO - [3/13] SLAs
+2026-03-02 14:03:50,071 - __main__ - INFO - Dependencies: None
+2026-03-02 14:03:50,071 - __main__ - INFO - Critical: True
+2026-03-02 14:03:50,071 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:03:50,086 - __main__ - INFO - [OK] SLAs seeded successfully
+2026-03-02 14:03:50,086 - __main__ - INFO -   Inserted: 0, Updated: 10
+2026-03-02 14:03:50,086 - __main__ - INFO - 
+2026-03-02 14:03:50,086 - __main__ - INFO - [4/13] Teams
+2026-03-02 14:03:50,086 - __main__ - INFO - Dependencies: None
+2026-03-02 14:03:50,086 - __main__ - INFO - Critical: True
+2026-03-02 14:03:50,086 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:03:50,102 - __main__ - INFO - [OK] Teams seeded successfully
+2026-03-02 14:03:50,102 - __main__ - INFO -   Inserted: 0, Updated: 7
+2026-03-02 14:03:50,102 - __main__ - INFO - 
+2026-03-02 14:03:50,102 - __main__ - INFO - [5/13] Staff
+2026-03-02 14:03:50,102 - __main__ - INFO - Dependencies: Roles, Departments
+2026-03-02 14:03:50,102 - __main__ - INFO - Critical: True
+2026-03-02 14:03:50,102 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:03:50,111 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\karan\Downloads\github\osTicket-docker\seeder\.venv\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2026-03-02 14:03:53,204 - __main__ - INFO - [OK] Staff seeded successfully
+2026-03-02 14:03:53,204 - __main__ - INFO -   Inserted: 0, Updated: 11
+2026-03-02 14:03:53,204 - __main__ - INFO - 
+2026-03-02 14:03:53,204 - __main__ - INFO - [6/13] Lists
+2026-03-02 14:03:53,204 - __main__ - INFO - Dependencies: None
+2026-03-02 14:03:53,204 - __main__ - INFO - Critical: True
+2026-03-02 14:03:53,206 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:03:53,219 - __main__ - INFO - [OK] Lists seeded successfully
+2026-03-02 14:03:53,219 - __main__ - INFO -   Inserted: 0, Updated: 5
+2026-03-02 14:03:53,219 - __main__ - INFO - 
+2026-03-02 14:03:53,219 - __main__ - INFO - [7/13] List Items
+2026-03-02 14:03:53,219 - __main__ - INFO - Dependencies: Lists
+2026-03-02 14:03:53,219 - __main__ - INFO - Critical: True
+2026-03-02 14:03:53,219 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:03:53,223 - __main__ - INFO - [OK] List Items seeded successfully
+2026-03-02 14:03:53,223 - __main__ - INFO -   Inserted: 0, Updated: 0
+2026-03-02 14:03:53,223 - __main__ - INFO - 
+2026-03-02 14:03:53,223 - __main__ - INFO - [8/13] Form Fields
+2026-03-02 14:03:53,223 - __main__ - INFO - Dependencies: Lists
+2026-03-02 14:03:53,223 - __main__ - INFO - Critical: True
+2026-03-02 14:03:53,223 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:03:53,245 - __main__ - INFO - [OK] Form Fields seeded successfully
+2026-03-02 14:03:53,245 - __main__ - INFO -   Inserted: 0, Updated: 10
+2026-03-02 14:03:53,245 - __main__ - INFO - 
+2026-03-02 14:03:53,245 - __main__ - INFO - [9/13] Help Topics
+2026-03-02 14:03:53,245 - __main__ - INFO - Dependencies: Departments, Teams, SLAs
+2026-03-02 14:03:53,245 - __main__ - INFO - Critical: True
+2026-03-02 14:03:53,245 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:03:53,245 - base - INFO - Generating help topics...
+2026-03-02 14:03:53,245 - base - INFO - Generated 83 help topics
+2026-03-02 14:03:53,245 - base - INFO - [OK] All 83 topics validated successfully
+2026-03-02 14:03:53,245 - base - INFO - Inserting 83 help topics...
+2026-03-02 14:03:53,373 - base - INFO - [OK] Help topics seeding complete: 83 inserted, 0 updated
+2026-03-02 14:03:53,373 - __main__ - INFO - [OK] Help Topics seeded successfully
+2026-03-02 14:03:53,373 - __main__ - INFO -   Inserted: 83, Updated: 0
+2026-03-02 14:03:53,373 - __main__ - INFO - 
+2026-03-02 14:03:53,373 - __main__ - INFO - [10/13] Help Topic Forms
+2026-03-02 14:03:53,373 - __main__ - INFO - Dependencies: Help Topics
+2026-03-02 14:03:53,373 - __main__ - INFO - Critical: True
+2026-03-02 14:03:53,373 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:03:53,373 - base - INFO - Assigning forms to help topics...
+2026-03-02 14:03:53,375 - base - INFO - Found 58 public help topics
+2026-03-02 14:03:53,452 - base - INFO - [OK] Help topic forms assigned: 58 inserted, 0 updated
+2026-03-02 14:03:53,452 - __main__ - INFO - [OK] Help Topic Forms seeded successfully
+2026-03-02 14:03:53,452 - __main__ - INFO -   Inserted: 58, Updated: 0
+2026-03-02 14:03:53,452 - __main__ - INFO - 
+2026-03-02 14:03:53,452 - __main__ - INFO - [11/13] Ticket Statuses
+2026-03-02 14:03:53,452 - __main__ - INFO - Dependencies: None
+2026-03-02 14:03:53,452 - __main__ - INFO - Critical: True
+2026-03-02 14:03:53,452 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:03:53,474 - __main__ - INFO - [OK] Ticket Statuses seeded successfully
+2026-03-02 14:03:53,474 - __main__ - INFO -   Inserted: 0, Updated: 16
+2026-03-02 14:03:53,474 - __main__ - INFO - 
+2026-03-02 14:03:53,474 - __main__ - INFO - [12/13] Filters
+2026-03-02 14:03:53,474 - __main__ - INFO - Dependencies: Help Topics
+2026-03-02 14:03:53,475 - __main__ - INFO - Critical: False
+2026-03-02 14:03:53,475 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:03:53,496 - __main__ - INFO - [OK] Filters seeded successfully
+2026-03-02 14:03:53,496 - __main__ - INFO -   Inserted: 0, Updated: 12
+2026-03-02 14:03:53,496 - __main__ - INFO - 
+2026-03-02 14:03:53,496 - __main__ - INFO - [13/13] Sequences
+2026-03-02 14:03:53,496 - __main__ - INFO - Dependencies: None
+2026-03-02 14:03:53,496 - __main__ - INFO - Critical: True
+2026-03-02 14:03:53,496 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:03:53,500 - __main__ - INFO - [OK] Sequences seeded successfully
+2026-03-02 14:03:53,500 - __main__ - INFO -   Inserted: 0, Updated: 2
+2026-03-02 14:03:53,500 - __main__ - INFO - 
+2026-03-02 14:03:53,500 - __main__ - INFO - Committing all changes to database...
+2026-03-02 14:03:53,507 - __main__ - INFO - [OK] All changes committed successfully
+2026-03-02 14:03:53,507 - __main__ - INFO - 
+2026-03-02 14:03:53,507 - __main__ - INFO - ======================================================================
+2026-03-02 14:03:53,507 - __main__ - INFO - SEEDING ORCHESTRATION SUMMARY
+2026-03-02 14:03:53,507 - __main__ - INFO - ======================================================================
+2026-03-02 14:03:53,507 - __main__ - INFO - Total Steps: 13
+2026-03-02 14:03:53,507 - __main__ - INFO - Successful: 13
+2026-03-02 14:03:53,507 - __main__ - INFO - Failed: 0
+2026-03-02 14:03:53,507 - __main__ - INFO - Total Records Inserted: 141
+2026-03-02 14:03:53,507 - __main__ - INFO - Total Records Updated: 91
+2026-03-02 14:03:53,507 - __main__ - INFO - Duration: 3.58 seconds
+2026-03-02 14:03:53,507 - __main__ - INFO - 
+2026-03-02 14:03:53,507 - __main__ - INFO - Detailed Results:
+2026-03-02 14:03:53,507 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:03:53,507 - __main__ - INFO - [OK] Roles: Seeding completed
+2026-03-02 14:03:53,507 - __main__ - INFO - [OK] Departments: Seeding completed
+2026-03-02 14:03:53,507 - __main__ - INFO - [OK] SLAs: Seeding completed
+2026-03-02 14:03:53,507 - __main__ - INFO - [OK] Teams: Seeding completed
+2026-03-02 14:03:53,507 - __main__ - INFO - [OK] Staff: Seeding completed
+2026-03-02 14:03:53,507 - __main__ - INFO - [OK] Lists: Seeding completed
+2026-03-02 14:03:53,507 - __main__ - INFO - [OK] List Items: Seeding completed
+2026-03-02 14:03:53,507 - __main__ - INFO - [OK] Form Fields: Seeding completed
+2026-03-02 14:03:53,508 - __main__ - INFO - [OK] Help Topics: Seeding completed
+2026-03-02 14:03:53,508 - __main__ - INFO - [OK] Help Topic Forms: Seeding completed
+2026-03-02 14:03:53,508 - __main__ - INFO - [OK] Ticket Statuses: Seeding completed
+2026-03-02 14:03:53,508 - __main__ - INFO - [OK] Filters: Seeding completed
+2026-03-02 14:03:53,508 - __main__ - INFO - [OK] Sequences: Seeding completed
+2026-03-02 14:03:53,508 - __main__ - INFO - ======================================================================
+2026-03-02 14:03:53,508 - __main__ - INFO - End Time: 2026-03-02 14:03:53.507339
+2026-03-02 14:03:53,508 - __main__ - INFO - ======================================================================
+2026-03-02 14:21:45,197 - __main__ - INFO - ======================================================================
+2026-03-02 14:21:45,197 - __main__ - INFO - OSTICKET SEEDING ORCHESTRATION STARTED
+2026-03-02 14:21:45,197 - __main__ - INFO - Start Time: 2026-03-02 14:21:45.195882
+2026-03-02 14:21:45,197 - __main__ - INFO - Demo Mode: False
+2026-03-02 14:21:45,197 - __main__ - INFO - ======================================================================
+2026-03-02 14:21:45,330 - connection - INFO - Database connection pool initialized successfully
+2026-03-02 14:21:45,332 - __main__ - INFO - Database connection established successfully
+2026-03-02 14:21:45,332 - __main__ - INFO - 
+2026-03-02 14:21:45,332 - __main__ - INFO - [1/13] Roles
+2026-03-02 14:21:45,332 - __main__ - INFO - Dependencies: None
+2026-03-02 14:21:45,332 - __main__ - INFO - Critical: True
+2026-03-02 14:21:45,332 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:21:45,347 - __main__ - INFO - [OK] Roles seeded successfully
+2026-03-02 14:21:45,347 - __main__ - INFO -   Inserted: 0, Updated: 10
+2026-03-02 14:21:45,347 - __main__ - INFO - 
+2026-03-02 14:21:45,348 - __main__ - INFO - [2/13] Departments
+2026-03-02 14:21:45,348 - __main__ - INFO - Dependencies: None
+2026-03-02 14:21:45,348 - __main__ - INFO - Critical: True
+2026-03-02 14:21:45,348 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:21:45,358 - __main__ - INFO - [OK] Departments seeded successfully
+2026-03-02 14:21:45,361 - __main__ - INFO -   Inserted: 0, Updated: 8
+2026-03-02 14:21:45,361 - __main__ - INFO - 
+2026-03-02 14:21:45,361 - __main__ - INFO - [3/13] SLAs
+2026-03-02 14:21:45,361 - __main__ - INFO - Dependencies: None
+2026-03-02 14:21:45,361 - __main__ - INFO - Critical: True
+2026-03-02 14:21:45,361 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:21:45,377 - __main__ - INFO - [OK] SLAs seeded successfully
+2026-03-02 14:21:45,377 - __main__ - INFO -   Inserted: 0, Updated: 10
+2026-03-02 14:21:45,377 - __main__ - INFO - 
+2026-03-02 14:21:45,377 - __main__ - INFO - [4/13] Teams
+2026-03-02 14:21:45,377 - __main__ - INFO - Dependencies: None
+2026-03-02 14:21:45,377 - __main__ - INFO - Critical: True
+2026-03-02 14:21:45,378 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:21:45,387 - __main__ - INFO - [OK] Teams seeded successfully
+2026-03-02 14:21:45,387 - __main__ - INFO -   Inserted: 0, Updated: 7
+2026-03-02 14:21:45,387 - __main__ - INFO - 
+2026-03-02 14:21:45,387 - __main__ - INFO - [5/13] Staff
+2026-03-02 14:21:45,387 - __main__ - INFO - Dependencies: Roles, Departments
+2026-03-02 14:21:45,388 - __main__ - INFO - Critical: True
+2026-03-02 14:21:45,389 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:21:45,394 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\karan\Downloads\github\osTicket-docker\seeder\.venv\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2026-03-02 14:21:49,223 - __main__ - INFO - [OK] Staff seeded successfully
+2026-03-02 14:21:49,224 - __main__ - INFO -   Inserted: 0, Updated: 11
+2026-03-02 14:21:49,224 - __main__ - INFO - 
+2026-03-02 14:21:49,224 - __main__ - INFO - [6/13] Lists
+2026-03-02 14:21:49,224 - __main__ - INFO - Dependencies: None
+2026-03-02 14:21:49,224 - __main__ - INFO - Critical: True
+2026-03-02 14:21:49,227 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:21:49,252 - __main__ - INFO - [OK] Lists seeded successfully
+2026-03-02 14:21:49,255 - __main__ - INFO -   Inserted: 0, Updated: 5
+2026-03-02 14:21:49,255 - __main__ - INFO - 
+2026-03-02 14:21:49,255 - __main__ - INFO - [7/13] List Items
+2026-03-02 14:21:49,255 - __main__ - INFO - Dependencies: Lists
+2026-03-02 14:21:49,255 - __main__ - INFO - Critical: True
+2026-03-02 14:21:49,255 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:21:49,270 - __main__ - INFO - [OK] List Items seeded successfully
+2026-03-02 14:21:49,272 - __main__ - INFO -   Inserted: 0, Updated: 0
+2026-03-02 14:21:49,272 - __main__ - INFO - 
+2026-03-02 14:21:49,272 - __main__ - INFO - [8/13] Form Fields
+2026-03-02 14:21:49,273 - __main__ - INFO - Dependencies: Lists
+2026-03-02 14:21:49,273 - __main__ - INFO - Critical: True
+2026-03-02 14:21:49,273 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:21:49,318 - __main__ - INFO - [OK] Form Fields seeded successfully
+2026-03-02 14:21:49,320 - __main__ - INFO -   Inserted: 0, Updated: 10
+2026-03-02 14:21:49,320 - __main__ - INFO - 
+2026-03-02 14:21:49,320 - __main__ - INFO - [9/13] Help Topics
+2026-03-02 14:21:49,320 - __main__ - INFO - Dependencies: Departments, Teams, SLAs
+2026-03-02 14:21:49,320 - __main__ - INFO - Critical: True
+2026-03-02 14:21:49,322 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:21:49,323 - base - INFO - Generating help topics...
+2026-03-02 14:21:49,324 - base - INFO - Generated 83 help topics
+2026-03-02 14:21:49,324 - base - INFO - [OK] All 83 topics validated successfully
+2026-03-02 14:21:49,324 - base - INFO - Inserting 83 help topics...
+2026-03-02 14:21:49,592 - base - INFO - [OK] Help topics seeding complete: 83 inserted, 0 updated
+2026-03-02 14:21:49,592 - __main__ - INFO - [OK] Help Topics seeded successfully
+2026-03-02 14:21:49,592 - __main__ - INFO -   Inserted: 83, Updated: 0
+2026-03-02 14:21:49,592 - __main__ - INFO - 
+2026-03-02 14:21:49,592 - __main__ - INFO - [10/13] Help Topic Forms
+2026-03-02 14:21:49,592 - __main__ - INFO - Dependencies: Help Topics
+2026-03-02 14:21:49,592 - __main__ - INFO - Critical: True
+2026-03-02 14:21:49,596 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:21:49,596 - base - INFO - Assigning forms to help topics...
+2026-03-02 14:21:49,596 - base - INFO - Found 58 public help topics
+2026-03-02 14:21:49,709 - base - INFO - [OK] Help topic forms assigned: 58 inserted, 0 updated
+2026-03-02 14:21:49,712 - __main__ - INFO - [OK] Help Topic Forms seeded successfully
+2026-03-02 14:21:49,712 - __main__ - INFO -   Inserted: 58, Updated: 0
+2026-03-02 14:21:49,712 - __main__ - INFO - 
+2026-03-02 14:21:49,712 - __main__ - INFO - [11/13] Ticket Statuses
+2026-03-02 14:21:49,712 - __main__ - INFO - Dependencies: None
+2026-03-02 14:21:49,712 - __main__ - INFO - Critical: True
+2026-03-02 14:21:49,712 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:21:49,754 - __main__ - INFO - [OK] Ticket Statuses seeded successfully
+2026-03-02 14:21:49,754 - __main__ - INFO -   Inserted: 0, Updated: 16
+2026-03-02 14:21:49,755 - __main__ - INFO - 
+2026-03-02 14:21:49,756 - __main__ - INFO - [12/13] Filters
+2026-03-02 14:21:49,756 - __main__ - INFO - Dependencies: Help Topics
+2026-03-02 14:21:49,756 - __main__ - INFO - Critical: False
+2026-03-02 14:21:49,756 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:21:49,783 - __main__ - INFO - [OK] Filters seeded successfully
+2026-03-02 14:21:49,786 - __main__ - INFO -   Inserted: 0, Updated: 12
+2026-03-02 14:21:49,786 - __main__ - INFO - 
+2026-03-02 14:21:49,786 - __main__ - INFO - [13/13] Sequences
+2026-03-02 14:21:49,786 - __main__ - INFO - Dependencies: None
+2026-03-02 14:21:49,786 - __main__ - INFO - Critical: True
+2026-03-02 14:21:49,788 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:21:49,792 - __main__ - INFO - [OK] Sequences seeded successfully
+2026-03-02 14:21:49,792 - __main__ - INFO -   Inserted: 0, Updated: 2
+2026-03-02 14:21:49,792 - __main__ - INFO - 
+2026-03-02 14:21:49,792 - __main__ - INFO - Committing all changes to database...
+2026-03-02 14:21:49,805 - __main__ - INFO - [OK] All changes committed successfully
+2026-03-02 14:21:49,806 - __main__ - INFO - 
+2026-03-02 14:21:49,806 - __main__ - INFO - ======================================================================
+2026-03-02 14:21:49,806 - __main__ - INFO - SEEDING ORCHESTRATION SUMMARY
+2026-03-02 14:21:49,806 - __main__ - INFO - ======================================================================
+2026-03-02 14:21:49,806 - __main__ - INFO - Total Steps: 13
+2026-03-02 14:21:49,807 - __main__ - INFO - Successful: 13
+2026-03-02 14:21:49,807 - __main__ - INFO - Failed: 0
+2026-03-02 14:21:49,807 - __main__ - INFO - Total Records Inserted: 141
+2026-03-02 14:21:49,807 - __main__ - INFO - Total Records Updated: 91
+2026-03-02 14:21:49,807 - __main__ - INFO - Duration: 4.61 seconds
+2026-03-02 14:21:49,807 - __main__ - INFO - 
+2026-03-02 14:21:49,807 - __main__ - INFO - Detailed Results:
+2026-03-02 14:21:49,810 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 14:21:49,810 - __main__ - INFO - [OK] Roles: Seeding completed
+2026-03-02 14:21:49,810 - __main__ - INFO - [OK] Departments: Seeding completed
+2026-03-02 14:21:49,810 - __main__ - INFO - [OK] SLAs: Seeding completed
+2026-03-02 14:21:49,810 - __main__ - INFO - [OK] Teams: Seeding completed
+2026-03-02 14:21:49,811 - __main__ - INFO - [OK] Staff: Seeding completed
+2026-03-02 14:21:49,811 - __main__ - INFO - [OK] Lists: Seeding completed
+2026-03-02 14:21:49,811 - __main__ - INFO - [OK] List Items: Seeding completed
+2026-03-02 14:21:49,811 - __main__ - INFO - [OK] Form Fields: Seeding completed
+2026-03-02 14:21:49,811 - __main__ - INFO - [OK] Help Topics: Seeding completed
+2026-03-02 14:21:49,811 - __main__ - INFO - [OK] Help Topic Forms: Seeding completed
+2026-03-02 14:21:49,811 - __main__ - INFO - [OK] Ticket Statuses: Seeding completed
+2026-03-02 14:21:49,811 - __main__ - INFO - [OK] Filters: Seeding completed
+2026-03-02 14:21:49,813 - __main__ - INFO - [OK] Sequences: Seeding completed
+2026-03-02 14:21:49,813 - __main__ - INFO - ======================================================================
+2026-03-02 14:21:49,814 - __main__ - INFO - End Time: 2026-03-02 14:21:49.806015
+2026-03-02 14:21:49,814 - __main__ - INFO - ======================================================================
+2026-03-02 15:31:41,389 - __main__ - INFO - ======================================================================
+2026-03-02 15:31:41,389 - __main__ - INFO - OSTICKET SEEDING ORCHESTRATION STARTED
+2026-03-02 15:31:41,391 - __main__ - INFO - Start Time: 2026-03-02 15:31:41.389248
+2026-03-02 15:31:41,391 - __main__ - INFO - Demo Mode: False
+2026-03-02 15:31:41,391 - __main__ - INFO - ======================================================================
+2026-03-02 15:31:41,532 - connection - INFO - Database connection pool initialized successfully
+2026-03-02 15:31:41,532 - __main__ - INFO - Database connection established successfully
+2026-03-02 15:31:41,532 - __main__ - INFO - 
+2026-03-02 15:31:41,532 - __main__ - INFO - [1/13] Roles
+2026-03-02 15:31:41,532 - __main__ - INFO - Dependencies: None
+2026-03-02 15:31:41,535 - __main__ - INFO - Critical: True
+2026-03-02 15:31:41,535 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 15:31:41,550 - __main__ - INFO - [OK] Roles seeded successfully
+2026-03-02 15:31:41,550 - __main__ - INFO -   Inserted: 0, Updated: 10
+2026-03-02 15:31:41,550 - __main__ - INFO - 
+2026-03-02 15:31:41,550 - __main__ - INFO - [2/13] Departments
+2026-03-02 15:31:41,550 - __main__ - INFO - Dependencies: None
+2026-03-02 15:31:41,550 - __main__ - INFO - Critical: True
+2026-03-02 15:31:41,550 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 15:31:41,563 - __main__ - INFO - [OK] Departments seeded successfully
+2026-03-02 15:31:41,564 - __main__ - INFO -   Inserted: 0, Updated: 8
+2026-03-02 15:31:41,564 - __main__ - INFO - 
+2026-03-02 15:31:41,564 - __main__ - INFO - [3/13] SLAs
+2026-03-02 15:31:41,564 - __main__ - INFO - Dependencies: None
+2026-03-02 15:31:41,565 - __main__ - INFO - Critical: True
+2026-03-02 15:31:41,565 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 15:31:41,578 - __main__ - INFO - [OK] SLAs seeded successfully
+2026-03-02 15:31:41,578 - __main__ - INFO -   Inserted: 0, Updated: 10
+2026-03-02 15:31:41,578 - __main__ - INFO - 
+2026-03-02 15:31:41,578 - __main__ - INFO - [4/13] Teams
+2026-03-02 15:31:41,578 - __main__ - INFO - Dependencies: None
+2026-03-02 15:31:41,578 - __main__ - INFO - Critical: True
+2026-03-02 15:31:41,578 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 15:31:41,588 - __main__ - INFO - [OK] Teams seeded successfully
+2026-03-02 15:31:41,591 - __main__ - INFO -   Inserted: 0, Updated: 7
+2026-03-02 15:31:41,591 - __main__ - INFO - 
+2026-03-02 15:31:41,591 - __main__ - INFO - [5/13] Staff
+2026-03-02 15:31:41,591 - __main__ - INFO - Dependencies: Roles, Departments
+2026-03-02 15:31:41,591 - __main__ - INFO - Critical: True
+2026-03-02 15:31:41,591 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 15:31:41,600 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\karan\Downloads\github\osTicket-docker\seeder\.venv\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2026-03-02 15:31:45,419 - __main__ - INFO - [OK] Staff seeded successfully
+2026-03-02 15:31:45,419 - __main__ - INFO -   Inserted: 0, Updated: 11
+2026-03-02 15:31:45,419 - __main__ - INFO - 
+2026-03-02 15:31:45,419 - __main__ - INFO - [6/13] Lists
+2026-03-02 15:31:45,419 - __main__ - INFO - Dependencies: None
+2026-03-02 15:31:45,419 - __main__ - INFO - Critical: True
+2026-03-02 15:31:45,419 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 15:31:45,423 - __main__ - INFO - [OK] Lists seeded successfully
+2026-03-02 15:31:45,423 - __main__ - INFO -   Inserted: 0, Updated: 5
+2026-03-02 15:31:45,423 - __main__ - INFO - 
+2026-03-02 15:31:45,423 - __main__ - INFO - [7/13] List Items
+2026-03-02 15:31:45,428 - __main__ - INFO - Dependencies: Lists
+2026-03-02 15:31:45,428 - __main__ - INFO - Critical: True
+2026-03-02 15:31:45,428 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 15:31:45,434 - __main__ - INFO - [OK] List Items seeded successfully
+2026-03-02 15:31:45,435 - __main__ - INFO -   Inserted: 0, Updated: 0
+2026-03-02 15:31:45,435 - __main__ - INFO - 
+2026-03-02 15:31:45,435 - __main__ - INFO - [8/13] Form Fields
+2026-03-02 15:31:45,435 - __main__ - INFO - Dependencies: Lists
+2026-03-02 15:31:45,435 - __main__ - INFO - Critical: True
+2026-03-02 15:31:45,435 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 15:31:45,454 - __main__ - INFO - [OK] Form Fields seeded successfully
+2026-03-02 15:31:45,454 - __main__ - INFO -   Inserted: 0, Updated: 10
+2026-03-02 15:31:45,454 - __main__ - INFO - 
+2026-03-02 15:31:45,454 - __main__ - INFO - [9/13] Help Topics
+2026-03-02 15:31:45,454 - __main__ - INFO - Dependencies: Departments, Teams, SLAs
+2026-03-02 15:31:45,454 - __main__ - INFO - Critical: True
+2026-03-02 15:31:45,454 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 15:31:45,454 - base - INFO - Generating help topics...
+2026-03-02 15:31:45,454 - base - INFO - Generated 83 help topics
+2026-03-02 15:31:45,454 - base - INFO - [OK] All 83 topics validated successfully
+2026-03-02 15:31:45,454 - base - INFO - Inserting 83 help topics...
+2026-03-02 15:31:45,599 - base - INFO - [OK] Help topics seeding complete: 83 inserted, 0 updated
+2026-03-02 15:31:45,599 - __main__ - INFO - [OK] Help Topics seeded successfully
+2026-03-02 15:31:45,599 - __main__ - INFO -   Inserted: 83, Updated: 0
+2026-03-02 15:31:45,599 - __main__ - INFO - 
+2026-03-02 15:31:45,600 - __main__ - INFO - [10/13] Help Topic Forms
+2026-03-02 15:31:45,600 - __main__ - INFO - Dependencies: Help Topics
+2026-03-02 15:31:45,600 - __main__ - INFO - Critical: True
+2026-03-02 15:31:45,600 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 15:31:45,600 - base - INFO - Assigning forms to help topics...
+2026-03-02 15:31:45,602 - base - INFO - Found 58 public help topics
+2026-03-02 15:31:45,682 - base - INFO - [OK] Help topic forms assigned: 58 inserted, 0 updated
+2026-03-02 15:31:45,682 - __main__ - INFO - [OK] Help Topic Forms seeded successfully
+2026-03-02 15:31:45,682 - __main__ - INFO -   Inserted: 58, Updated: 0
+2026-03-02 15:31:45,682 - __main__ - INFO - 
+2026-03-02 15:31:45,682 - __main__ - INFO - [11/13] Ticket Statuses
+2026-03-02 15:31:45,682 - __main__ - INFO - Dependencies: None
+2026-03-02 15:31:45,682 - __main__ - INFO - Critical: True
+2026-03-02 15:31:45,684 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 15:31:45,711 - __main__ - INFO - [OK] Ticket Statuses seeded successfully
+2026-03-02 15:31:45,712 - __main__ - INFO -   Inserted: 0, Updated: 16
+2026-03-02 15:31:45,712 - __main__ - INFO - 
+2026-03-02 15:31:45,712 - __main__ - INFO - [12/13] Filters
+2026-03-02 15:31:45,712 - __main__ - INFO - Dependencies: Help Topics
+2026-03-02 15:31:45,713 - __main__ - INFO - Critical: False
+2026-03-02 15:31:45,713 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 15:31:45,734 - __main__ - INFO - [OK] Filters seeded successfully
+2026-03-02 15:31:45,734 - __main__ - INFO -   Inserted: 0, Updated: 12
+2026-03-02 15:31:45,734 - __main__ - INFO - 
+2026-03-02 15:31:45,734 - __main__ - INFO - [13/13] Sequences
+2026-03-02 15:31:45,734 - __main__ - INFO - Dependencies: None
+2026-03-02 15:31:45,734 - __main__ - INFO - Critical: True
+2026-03-02 15:31:45,734 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 15:31:45,740 - __main__ - INFO - [OK] Sequences seeded successfully
+2026-03-02 15:31:45,742 - __main__ - INFO -   Inserted: 0, Updated: 2
+2026-03-02 15:31:45,742 - __main__ - INFO - 
+2026-03-02 15:31:45,742 - __main__ - INFO - Committing all changes to database...
+2026-03-02 15:31:45,749 - __main__ - INFO - [OK] All changes committed successfully
+2026-03-02 15:31:45,749 - __main__ - INFO - 
+2026-03-02 15:31:45,751 - __main__ - INFO - ======================================================================
+2026-03-02 15:31:45,751 - __main__ - INFO - SEEDING ORCHESTRATION SUMMARY
+2026-03-02 15:31:45,751 - __main__ - INFO - ======================================================================
+2026-03-02 15:31:45,753 - __main__ - INFO - Total Steps: 13
+2026-03-02 15:31:45,753 - __main__ - INFO - Successful: 13
+2026-03-02 15:31:45,753 - __main__ - INFO - Failed: 0
+2026-03-02 15:31:45,753 - __main__ - INFO - Total Records Inserted: 141
+2026-03-02 15:31:45,753 - __main__ - INFO - Total Records Updated: 91
+2026-03-02 15:31:45,753 - __main__ - INFO - Duration: 4.36 seconds
+2026-03-02 15:31:45,753 - __main__ - INFO - 
+2026-03-02 15:31:45,753 - __main__ - INFO - Detailed Results:
+2026-03-02 15:31:45,753 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 15:31:45,753 - __main__ - INFO - [OK] Roles: Seeding completed
+2026-03-02 15:31:45,753 - __main__ - INFO - [OK] Departments: Seeding completed
+2026-03-02 15:31:45,755 - __main__ - INFO - [OK] SLAs: Seeding completed
+2026-03-02 15:31:45,755 - __main__ - INFO - [OK] Teams: Seeding completed
+2026-03-02 15:31:45,755 - __main__ - INFO - [OK] Staff: Seeding completed
+2026-03-02 15:31:45,755 - __main__ - INFO - [OK] Lists: Seeding completed
+2026-03-02 15:31:45,755 - __main__ - INFO - [OK] List Items: Seeding completed
+2026-03-02 15:31:45,755 - __main__ - INFO - [OK] Form Fields: Seeding completed
+2026-03-02 15:31:45,757 - __main__ - INFO - [OK] Help Topics: Seeding completed
+2026-03-02 15:31:45,757 - __main__ - INFO - [OK] Help Topic Forms: Seeding completed
+2026-03-02 15:31:45,757 - __main__ - INFO - [OK] Ticket Statuses: Seeding completed
+2026-03-02 15:31:45,757 - __main__ - INFO - [OK] Filters: Seeding completed
+2026-03-02 15:31:45,757 - __main__ - INFO - [OK] Sequences: Seeding completed
+2026-03-02 15:31:45,757 - __main__ - INFO - ======================================================================
+2026-03-02 15:31:45,757 - __main__ - INFO - End Time: 2026-03-02 15:31:45.749904
+2026-03-02 15:31:45,759 - __main__ - INFO - ======================================================================
+2026-03-02 15:47:53,427 - __main__ - INFO - ======================================================================
+2026-03-02 15:47:53,427 - __main__ - INFO - OSTICKET SEEDING ORCHESTRATION STARTED
+2026-03-02 15:47:53,427 - __main__ - INFO - Start Time: 2026-03-02 15:47:53.427154
+2026-03-02 15:47:53,427 - __main__ - INFO - Demo Mode: False
+2026-03-02 15:47:53,427 - __main__ - INFO - ======================================================================
+2026-03-02 15:47:53,561 - connection - INFO - Database connection pool initialized successfully
+2026-03-02 15:47:53,561 - __main__ - INFO - Database connection established successfully
+2026-03-02 15:47:53,561 - __main__ - INFO - 
+2026-03-02 15:47:53,561 - __main__ - INFO - [1/13] Roles
+2026-03-02 15:47:53,561 - __main__ - INFO - Dependencies: None
+2026-03-02 15:47:53,563 - __main__ - INFO - Critical: True
+2026-03-02 15:47:53,563 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 15:47:53,582 - __main__ - INFO - [OK] Roles seeded successfully
+2026-03-02 15:47:53,582 - __main__ - INFO -   Inserted: 0, Updated: 10
+2026-03-02 15:47:53,582 - __main__ - INFO - 
+2026-03-02 15:47:53,582 - __main__ - INFO - [2/13] Departments
+2026-03-02 15:47:53,582 - __main__ - INFO - Dependencies: None
+2026-03-02 15:47:53,582 - __main__ - INFO - Critical: True
+2026-03-02 15:47:53,582 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 15:47:53,597 - __main__ - INFO - [OK] Departments seeded successfully
+2026-03-02 15:47:53,597 - __main__ - INFO -   Inserted: 0, Updated: 8
+2026-03-02 15:47:53,597 - __main__ - INFO - 
+2026-03-02 15:47:53,597 - __main__ - INFO - [3/13] SLAs
+2026-03-02 15:47:53,597 - __main__ - INFO - Dependencies: None
+2026-03-02 15:47:53,597 - __main__ - INFO - Critical: True
+2026-03-02 15:47:53,597 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 15:47:53,613 - __main__ - INFO - [OK] SLAs seeded successfully
+2026-03-02 15:47:53,613 - __main__ - INFO -   Inserted: 0, Updated: 10
+2026-03-02 15:47:53,613 - __main__ - INFO - 
+2026-03-02 15:47:53,613 - __main__ - INFO - [4/13] Teams
+2026-03-02 15:47:53,613 - __main__ - INFO - Dependencies: None
+2026-03-02 15:47:53,613 - __main__ - INFO - Critical: True
+2026-03-02 15:47:53,613 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 15:47:53,628 - __main__ - INFO - [OK] Teams seeded successfully
+2026-03-02 15:47:53,628 - __main__ - INFO -   Inserted: 0, Updated: 7
+2026-03-02 15:47:53,628 - __main__ - INFO - 
+2026-03-02 15:47:53,628 - __main__ - INFO - [5/13] Staff
+2026-03-02 15:47:53,628 - __main__ - INFO - Dependencies: Roles, Departments
+2026-03-02 15:47:53,631 - __main__ - INFO - Critical: True
+2026-03-02 15:47:53,631 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 15:47:53,638 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "C:\Users\karan\Downloads\github\osTicket-docker\seeder\.venv\Lib\site-packages\passlib\handlers\bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+2026-03-02 15:47:58,004 - __main__ - INFO - [OK] Staff seeded successfully
+2026-03-02 15:47:58,005 - __main__ - INFO -   Inserted: 0, Updated: 11
+2026-03-02 15:47:58,005 - __main__ - INFO - 
+2026-03-02 15:47:58,005 - __main__ - INFO - [6/13] Lists
+2026-03-02 15:47:58,005 - __main__ - INFO - Dependencies: None
+2026-03-02 15:47:58,005 - __main__ - INFO - Critical: True
+2026-03-02 15:47:58,005 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 15:47:58,013 - __main__ - INFO - [OK] Lists seeded successfully
+2026-03-02 15:47:58,013 - __main__ - INFO -   Inserted: 0, Updated: 5
+2026-03-02 15:47:58,013 - __main__ - INFO - 
+2026-03-02 15:47:58,013 - __main__ - INFO - [7/13] List Items
+2026-03-02 15:47:58,013 - __main__ - INFO - Dependencies: Lists
+2026-03-02 15:47:58,013 - __main__ - INFO - Critical: True
+2026-03-02 15:47:58,013 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 15:47:58,019 - __main__ - INFO - [OK] List Items seeded successfully
+2026-03-02 15:47:58,020 - __main__ - INFO -   Inserted: 0, Updated: 0
+2026-03-02 15:47:58,020 - __main__ - INFO - 
+2026-03-02 15:47:58,021 - __main__ - INFO - [8/13] Form Fields
+2026-03-02 15:47:58,021 - __main__ - INFO - Dependencies: Lists
+2026-03-02 15:47:58,021 - __main__ - INFO - Critical: True
+2026-03-02 15:47:58,021 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 15:47:58,040 - __main__ - INFO - [OK] Form Fields seeded successfully
+2026-03-02 15:47:58,040 - __main__ - INFO -   Inserted: 0, Updated: 10
+2026-03-02 15:47:58,040 - __main__ - INFO - 
+2026-03-02 15:47:58,040 - __main__ - INFO - [9/13] Help Topics
+2026-03-02 15:47:58,040 - __main__ - INFO - Dependencies: Departments, Teams, SLAs
+2026-03-02 15:47:58,040 - __main__ - INFO - Critical: True
+2026-03-02 15:47:58,040 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 15:47:58,040 - base - INFO - Generating help topics...
+2026-03-02 15:47:58,041 - base - INFO - Generated 83 help topics
+2026-03-02 15:47:58,041 - base - INFO - [OK] All 83 topics validated successfully
+2026-03-02 15:47:58,041 - base - INFO - Inserting 83 help topics...
+2026-03-02 15:47:58,177 - base - INFO - [OK] Help topics seeding complete: 83 inserted, 0 updated
+2026-03-02 15:47:58,177 - __main__ - INFO - [OK] Help Topics seeded successfully
+2026-03-02 15:47:58,177 - __main__ - INFO -   Inserted: 83, Updated: 0
+2026-03-02 15:47:58,177 - __main__ - INFO - 
+2026-03-02 15:47:58,177 - __main__ - INFO - [10/13] Help Topic Forms
+2026-03-02 15:47:58,177 - __main__ - INFO - Dependencies: Help Topics
+2026-03-02 15:47:58,177 - __main__ - INFO - Critical: True
+2026-03-02 15:47:58,177 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 15:47:58,178 - base - INFO - Assigning forms to help topics...
+2026-03-02 15:47:58,180 - base - INFO - Found 58 public help topics
+2026-03-02 15:47:58,261 - base - INFO - [OK] Help topic forms assigned: 58 inserted, 0 updated
+2026-03-02 15:47:58,263 - __main__ - INFO - [OK] Help Topic Forms seeded successfully
+2026-03-02 15:47:58,263 - __main__ - INFO -   Inserted: 58, Updated: 0
+2026-03-02 15:47:58,263 - __main__ - INFO - 
+2026-03-02 15:47:58,263 - __main__ - INFO - [11/13] Ticket Statuses
+2026-03-02 15:47:58,263 - __main__ - INFO - Dependencies: None
+2026-03-02 15:47:58,263 - __main__ - INFO - Critical: True
+2026-03-02 15:47:58,263 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 15:47:58,293 - __main__ - INFO - [OK] Ticket Statuses seeded successfully
+2026-03-02 15:47:58,293 - __main__ - INFO -   Inserted: 0, Updated: 16
+2026-03-02 15:47:58,293 - __main__ - INFO - 
+2026-03-02 15:47:58,293 - __main__ - INFO - [12/13] Filters
+2026-03-02 15:47:58,293 - __main__ - INFO - Dependencies: Help Topics
+2026-03-02 15:47:58,293 - __main__ - INFO - Critical: False
+2026-03-02 15:47:58,293 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 15:47:58,316 - __main__ - INFO - [OK] Filters seeded successfully
+2026-03-02 15:47:58,316 - __main__ - INFO -   Inserted: 0, Updated: 12
+2026-03-02 15:47:58,316 - __main__ - INFO - 
+2026-03-02 15:47:58,319 - __main__ - INFO - [13/13] Sequences
+2026-03-02 15:47:58,319 - __main__ - INFO - Dependencies: None
+2026-03-02 15:47:58,320 - __main__ - INFO - Critical: True
+2026-03-02 15:47:58,320 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 15:47:58,323 - __main__ - INFO - [OK] Sequences seeded successfully
+2026-03-02 15:47:58,325 - __main__ - INFO -   Inserted: 0, Updated: 2
+2026-03-02 15:47:58,325 - __main__ - INFO - 
+2026-03-02 15:47:58,325 - __main__ - INFO - Committing all changes to database...
+2026-03-02 15:47:58,330 - __main__ - INFO - [OK] All changes committed successfully
+2026-03-02 15:47:58,330 - __main__ - INFO - 
+2026-03-02 15:47:58,330 - __main__ - INFO - ======================================================================
+2026-03-02 15:47:58,330 - __main__ - INFO - SEEDING ORCHESTRATION SUMMARY
+2026-03-02 15:47:58,330 - __main__ - INFO - ======================================================================
+2026-03-02 15:47:58,330 - __main__ - INFO - Total Steps: 13
+2026-03-02 15:47:58,330 - __main__ - INFO - Successful: 13
+2026-03-02 15:47:58,330 - __main__ - INFO - Failed: 0
+2026-03-02 15:47:58,333 - __main__ - INFO - Total Records Inserted: 141
+2026-03-02 15:47:58,333 - __main__ - INFO - Total Records Updated: 91
+2026-03-02 15:47:58,333 - __main__ - INFO - Duration: 4.90 seconds
+2026-03-02 15:47:58,333 - __main__ - INFO - 
+2026-03-02 15:47:58,333 - __main__ - INFO - Detailed Results:
+2026-03-02 15:47:58,333 - __main__ - INFO - ----------------------------------------------------------------------
+2026-03-02 15:47:58,333 - __main__ - INFO - [OK] Roles: Seeding completed
+2026-03-02 15:47:58,333 - __main__ - INFO - [OK] Departments: Seeding completed
+2026-03-02 15:47:58,333 - __main__ - INFO - [OK] SLAs: Seeding completed
+2026-03-02 15:47:58,333 - __main__ - INFO - [OK] Teams: Seeding completed
+2026-03-02 15:47:58,333 - __main__ - INFO - [OK] Staff: Seeding completed
+2026-03-02 15:47:58,333 - __main__ - INFO - [OK] Lists: Seeding completed
+2026-03-02 15:47:58,333 - __main__ - INFO - [OK] List Items: Seeding completed
+2026-03-02 15:47:58,333 - __main__ - INFO - [OK] Form Fields: Seeding completed
+2026-03-02 15:47:58,335 - __main__ - INFO - [OK] Help Topics: Seeding completed
+2026-03-02 15:47:58,335 - __main__ - INFO - [OK] Help Topic Forms: Seeding completed
+2026-03-02 15:47:58,335 - __main__ - INFO - [OK] Ticket Statuses: Seeding completed
+2026-03-02 15:47:58,335 - __main__ - INFO - [OK] Filters: Seeding completed
+2026-03-02 15:47:58,335 - __main__ - INFO - [OK] Sequences: Seeding completed
+2026-03-02 15:47:58,335 - __main__ - INFO - ======================================================================
+2026-03-02 15:47:58,335 - __main__ - INFO - End Time: 2026-03-02 15:47:58.330324
+2026-03-02 15:47:58,335 - __main__ - INFO - ======================================================================

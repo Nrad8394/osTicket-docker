@@ -4,14 +4,16 @@
     "name": "New",
     "state": "open",
     "color": "#3498db",
-    "icon": "icon-file"
+    "icon": "icon-file",
+    "mode": 1
   },
   {
     "id": 2,
     "name": "Assigned",
     "state": "open",
     "color": "#9b59b6",
-    "icon": "icon-user"
+    "icon": "icon-user",
+    "mode": 1
   },
   {
     "id": 3,
@@ -19,97 +21,111 @@
     "state": "open",
     "color": "#e67e22",
     "color_hex": "e67e22",
-    "icon": "icon-spinner"
+    "icon": "icon-spinner",
+    "mode": 1
   },
   {
     "id": 4,
     "name": "On Hold",
     "state": "open",
     "color": "#95a5a6",
-    "icon": "icon-pause"
+    "icon": "icon-pause",
+    "mode": 1
   },
   {
     "id": 5,
     "name": "Waiting on Customer",
     "state": "open",
     "color": "#f39c12",
-    "icon": "icon-hourglass"
+    "icon": "icon-hourglass",
+    "mode": 1
   },
   {
     "id": 6,
     "name": "Pending Review",
     "state": "open",
     "color": "#16a085",
-    "icon": "icon-eye"
+    "icon": "icon-eye",
+    "mode": 1
   },
   {
     "id": 7,
     "name": "Escalated",
     "state": "open",
     "color": "#c0392b",
-    "icon": "icon-exclamation"
+    "icon": "icon-exclamation",
+    "mode": 1
   },
   {
     "id": 8,
     "name": "Information Needed",
     "state": "open",
     "color": "#2980b9",
-    "icon": "icon-question"
+    "icon": "icon-question",
+    "mode": 1
   },
   {
     "id": 9,
     "name": "Ready for Closure",
     "state": "closed",
     "color": "#27ae60",
-    "icon": "icon-check"
+    "icon": "icon-check",
+    "mode": 1
   },
   {
     "id": 10,
     "name": "Resolved",
     "state": "resolved",
     "color": "#27ae60",
-    "icon": "icon-check-circle"
+    "icon": "icon-check-circle",
+    "mode": 1
   },
   {
     "id": 11,
     "name": "Closed",
     "state": "closed",
     "color": "#34495e",
-    "icon": "icon-ban"
+    "icon": "icon-ban",
+    "mode": 1
   },
   {
     "id": 12,
     "name": "Reopened",
     "state": "open",
     "color": "#d35400",
-    "icon": "icon-refresh"
+    "icon": "icon-refresh",
+    "mode": 1
   },
   {
     "id": 13,
     "name": "Not a Bug",
     "state": "resolved",
     "color": "#8e44ad",
-    "icon": "icon-ok"
+    "icon": "icon-ok",
+    "mode": 1
   },
   {
     "id": 14,
     "name": "Duplicate",
     "state": "closed",
     "color": "#7f8c8d",
-    "icon": "icon-copy"
+    "icon": "icon-copy",
+    "mode": 1
   },
   {
     "id": 15,
     "name": "Won't Fix",
     "state": "closed",
     "color": "#c0392b",
-    "icon": "icon-close"
+    "icon": "icon-close",
+    "mode": 1
   },
   {
     "id": 16,
     "name": "Unable to Reproduce",
     "state": "closed",
     "color": "#95a5a6",
-    "icon": "icon-search"
+    "icon": "icon-search",
+    "mode": 1
   }
 ]

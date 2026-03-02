@@ -130,7 +130,7 @@ class HelpTopicGenerator:
                 'sequence_id': 0,  # Use default numbering
                 'ispublic': system.ispublic,
                 'noautoresp': 0,  # Send auto-response
-                'flags': 0,  # No special flags
+                'flags': 2,  # FLAG_ACTIVE (0x0002) - Must be set for visibility
                 'status_id': 0,  # Use ticket status default
                 'priority_id': 0,  # Use priority default
                 'notes': f"Parent category for {system.name} system issues",
@@ -175,7 +175,7 @@ class HelpTopicGenerator:
                         'sequence_id': 0,  # Use default numbering
                         'ispublic': issue_type.ispublic if issue_type.code != 'DBI' else 0,
                         'noautoresp': 0,  # Send auto-response
-                        'flags': 0,  # No special flags
+                        'flags': 2,  # FLAG_ACTIVE (0x0002) - Must be set for visibility
                         'status_id': 0,  # Use ticket status default
                         'priority_id': 0,  # Use priority default
                         'sort': topic_id,
@@ -207,7 +207,7 @@ class HelpTopicGenerator:
                 'sequence_id': 0,
                 'ispublic': 0,  # Internal only
                 'noautoresp': 0,
-                'flags': 0,
+                'flags': 2,  # FLAG_ACTIVE (0x0002) - Must be set for visibility
                 'status_id': 0,
                 'priority_id': 0,
                 'notes': "RFC reviews and change approvals",
@@ -226,7 +226,7 @@ class HelpTopicGenerator:
                 'sequence_id': 0,
                 'ispublic': 0,  # Internal only
                 'noautoresp': 0,
-                'flags': 0,
+                'flags': 2,  # FLAG_ACTIVE (0x0002) - Must be set for visibility
                 'status_id': 0,
                 'priority_id': 0,
                 'notes': "Direct database intervention requests",
@@ -245,7 +245,7 @@ class HelpTopicGenerator:
                 'sequence_id': 0,
                 'ispublic': 0,  # Internal only
                 'noautoresp': 0,
-                'flags': 0,
+                'flags': 2,  # FLAG_ACTIVE (0x0002) - Must be set for visibility
                 'status_id': 0,
                 'priority_id': 0,
                 'notes': "Security incidents requiring ISS investigation",
@@ -347,6 +347,8 @@ class HelpTopicSeeder(BaseSeeder):
                         dept_id=VALUES(dept_id),
                         team_id=VALUES(team_id),
                         sla_id=VALUES(sla_id),
+                        flags=VALUES(flags),
+                        ispublic=VALUES(ispublic),
                         updated=NOW()
                 """
                 

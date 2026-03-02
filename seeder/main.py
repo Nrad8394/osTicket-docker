@@ -15,11 +15,12 @@ Seeding Order (Non-Negotiable):
 6. Lists (no deps)
 7. List Items (depends: lists)
 8. Form Fields (depends: lists)
-9. Help Topics (depends: departments, teams, slas) [Phase 1]
-10. Ticket Statuses (no deps)
-11. Filters (depends: help_topics)
-12. Sequences (no deps)
-13. Demo Tickets (optional, depends: all above)
+9. Help Topics (depends: departments, teams, slas)
+10. Help Topic Forms (depends: help_topics) - Assigns forms to topics for portal visibility
+11. Ticket Statuses (no deps)
+12. Filters (depends: help_topics)
+13. Sequences (no deps)
+14. Demo Tickets (optional, depends: all above)
 """
 
 import sys
@@ -46,6 +47,7 @@ from seeders import (
     FormFieldSeeder,
     StatusSeeder,
     HelpTopicSeeder,
+    HelpTopicFormSeeder,
     FilterSeeder,
     SequenceSeeder,
     DemoTicketSeeder
@@ -141,6 +143,12 @@ class SeedingOrchestrator:
                 'name': 'Help Topics',
                 'seeder': HelpTopicSeeder,
                 'depends_on': ['Departments', 'Teams', 'SLAs'],
+                'critical': True
+            },
+            {
+                'name': 'Help Topic Forms',
+                'seeder': HelpTopicFormSeeder,
+                'depends_on': ['Help Topics'],
                 'critical': True
             },
             {
@@ -333,6 +341,13 @@ def main():
         description='osTicket Database Seeding Orchestration'
     )
     parser.add_argument(
+        '--env',
+        type=str,
+        default=None,
+        choices=['local', 'docker', 'kubernetes', 'azure'],
+        help='Deployment environment (default: auto-detect)'
+    )
+    parser.add_argument(
         '--demo',
         action='store_true',
         help='Include demo tickets in seeding'
@@ -365,7 +380,7 @@ def main():
     try:
         # Load configuration with arguments
         config = Config(
-            env='docker',
+            env=args.env,  # Use auto-detect if not specified
             env_file='.env',
             mode=args.mode,
             backup=args.backup,

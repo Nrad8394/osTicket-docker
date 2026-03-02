@@ -29,6 +29,7 @@ from .lists import ListSeeder
 from .list_items import ListItemSeeder
 from .form_fields import FormFieldSeeder
 from .help_topics import HelpTopicSeeder
+from .help_topic_forms import HelpTopicFormSeeder
 from .statuses import StatusSeeder
 from .filters import FilterSeeder
 from .sequences import SequenceSeeder
@@ -48,6 +49,7 @@ __all__ = [
     'ListItemSeeder',
     'FormFieldSeeder',
     'HelpTopicSeeder',
+    'HelpTopicFormSeeder',
     'StatusSeeder',
     'FilterSeeder',
     'SequenceSeeder',
