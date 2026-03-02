@@ -47,9 +47,6 @@ services:
   # ─────────────────────────────────────────────
   osticket:
     build:
-      # Context is the PARENT directory so Docker can see both:
-      #   osTicket_config/  (Dockerfile, config/, scripts/)
-      #   osTicket/         (the osTicket source files)
       context: .
       dockerfile: Dockerfile
       args:

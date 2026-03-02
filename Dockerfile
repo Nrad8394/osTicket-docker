@@ -1,17 +1,13 @@
 # ─────────────────────────────────────────────────────────────────
 #  osTicket v1.18.3 — Fully Automated Docker Image
-#  PHP 8.1 + Apache  |  Zero-touch install on first boot
+#  PHP 8.2 + Apache  |  Zero-touch install on first boot
 # ─────────────────────────────────────────────────────────────────
-FROM php:8.1-apache
+FROM php:8.2-apache
 
 ARG OSTICKET_DIR=./osTicket-v1.18.3/upload
 
 # ── System packages & PHP extensions ─────────────────────────────
-# NOTE: On Debian Trixie (php:8.1-apache base), libc-client-dev was
-# removed. We install libunistring-dev + uw-mailutils as replacement,
-# and build imap manually from mbox/uw-imap source.
-# Alternatively we skip imap (osTicket fetches mail via laminas-mail
-# which doesn't require the PHP imap ext for OAuth2/SMTP flows).
+# NOTE: php:8.2-apache uses Debian Bookworm base with updated packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
         libpng-dev \
         libjpeg62-turbo-dev \
@@ -60,6 +56,11 @@ WORKDIR /var/www/html
 
 COPY ${OSTICKET_DIR}/ ./
 
+# ── Fix installer paths: copy setup streams to upgrader location ──
+RUN mkdir -p /var/www/html/include/upgrader/streams/core && \
+    cp -r /var/www/html/setup/inc/streams/core/* /var/www/html/include/upgrader/streams/core/ && \
+    md5sum /var/www/html/include/upgrader/streams/core/install-mysql.sql | awk '{print $1}' > /var/www/html/include/upgrader/streams/core.sig
+
 # ── Config file — writable for installer, then locked after setup ─
 RUN cp /var/www/html/include/ost-sampleconfig.php \
        /var/www/html/include/ost-config.php \
@@ -82,7 +83,9 @@ RUN echo "*/5 * * * * www-data /usr/local/bin/php /var/www/html/api/cron.php > /
 
 # ── Entrypoint ────────────────────────────────────────────────────
 COPY scripts/entrypoint.sh /entrypoint.sh
-RUN  chmod +x /entrypoint.sh
+COPY scripts/web-install.sh /usr/local/bin/web-install.sh
+RUN  chmod +x /entrypoint.sh \
+    && chmod +x /usr/local/bin/web-install.sh
 
 EXPOSE 80
 
