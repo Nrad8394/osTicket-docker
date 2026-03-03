@@ -52,18 +52,31 @@ class HelpTopicFormSeeder(BaseSeeder):
             
             # Assign Ticket Details form (form_id=2) to each help topic
             for topic_id in topic_ids:
-                sql = f"""
-                    INSERT INTO {self.table('help_topic_form')} (topic_id, form_id)
-                    VALUES (%s, %s)
-                    ON DUPLICATE KEY UPDATE form_id=VALUES(form_id)
-                """
-                result = self.conn.execute(sql, [topic_id, 2])
-                
-                if result.rowcount > 0:
-                    if result.lastrowid > 0:
+                # Idempotent: check if the exact association already exists
+                check_sql = f"SELECT 1 FROM {self.table('help_topic_form')} WHERE topic_id=%s AND form_id=%s LIMIT 1"
+                exists = self.conn.fetch_one(check_sql, (topic_id, 2))
+
+                if exists:
+                    # association already present; skip
+                    continue
+
+                # If association for this topic exists with a different form_id,
+                # update it to the Ticket Details form; otherwise insert new row.
+                # Check for any existing row for topic_id
+                any_sql = f"SELECT id, form_id FROM {self.table('help_topic_form')} WHERE topic_id=%s LIMIT 1"
+                any_row = self.conn.fetch_one(any_sql, (topic_id,))
+
+                if any_row:
+                    # Update existing association to form_id=2
+                    update_sql = f"UPDATE {self.table('help_topic_form')} SET form_id=%s WHERE id=%s"
+                    self.conn.execute(update_sql, (2, any_row[0]))
+                    updated += 1
+                else:
+                    # Insert new association
+                    insert_sql = f"INSERT INTO {self.table('help_topic_form')} (topic_id, form_id) VALUES (%s, %s)"
+                    result = self.conn.execute(insert_sql, (topic_id, 2))
+                    if result.rowcount > 0:
                         inserted += 1
-                    else:
-                        updated += 1
             
             self.log_info(f"[OK] Help topic forms assigned: {inserted} inserted, {updated} updated")
             

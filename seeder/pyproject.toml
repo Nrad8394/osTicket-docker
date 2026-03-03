@@ -15,4 +15,5 @@ dependencies = [
     "pytest-cov==4.1.0",
     "python-dotenv==1.0.0",
     "pyyaml==6.0.1",
+    "requests>=2.32.5",
 ]
