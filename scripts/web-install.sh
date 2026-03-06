@@ -12,7 +12,7 @@ echo "========================"
 # 2. Database has osTicket tables
 if grep -q "define('OSTINSTALLED',TRUE)" /var/www/html/include/ost-config.php 2>/dev/null; then
     # Double-check that database tables exist
-    TABLE_COUNT=$(mysql -h "${MYSQL_HOST:-mysql}" --ssl=0 -u "${MYSQL_DATABASE}" -p"${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" \
+    TABLE_COUNT=$(mysql -h "${MYSQL_HOST:-mysql}" --ssl=0 -u "${MYSQL_USER}" -p"${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" \
         -s -N -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='${MYSQL_DATABASE}' AND table_name LIKE '${MYSQL_PREFIX:-ost_}%'" 2>/dev/null || echo "0")
     
     if [ "$TABLE_COUNT" -gt 10 ]; then

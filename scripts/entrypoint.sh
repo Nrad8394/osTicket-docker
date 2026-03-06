@@ -254,6 +254,44 @@ verify_install() {
 }
 
 # ─────────────────────────────────────────────────────────────────
+#  Check if already installed and finalize if needed
+# ─────────────────────────────────────────────────────────────────
+check_and_finalize_installation() {
+    # Check if database already has osTicket tables
+    local table_count
+    table_count=$(mysql -h"${MYSQL_HOST}" -P"${MYSQL_PORT}" \
+        --ssl=0 \
+        -u"${MYSQL_USER}" -p"${MYSQL_PASSWORD}" \
+        -s -N -e "SELECT COUNT(*) FROM information_schema.tables
+                  WHERE table_schema='${MYSQL_DATABASE}'
+                  AND table_name LIKE '${MYSQL_PREFIX}%';" 2>/dev/null || echo "0")
+
+    if [ "${table_count}" -gt 10 ]; then
+        # Tables exist - this is a partially installed or already installed system
+        if ! grep -q "define('OSTINSTALLED',TRUE)" "${CONFIG_FILE}" 2>/dev/null; then
+            # Tables exist but config not marked as installed - finalize it
+            warn "Found ${table_count} osTicket tables but config not marked as installed"
+            warn "Finalizing installation..."
+            
+            # Update config to mark as installed
+            sed -i "s/define('OSTINSTALLED',FALSE)/define('OSTINSTALLED',TRUE)/" "${CONFIG_FILE}"
+            
+            # Create install flag
+            echo "installed=$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "${INSTALL_FLAG}"
+            echo "version=1.18.3" >> "${INSTALL_FLAG}"
+            echo "db_host=${MYSQL_HOST}" >> "${INSTALL_FLAG}"
+            echo "admin_user=${OST_ADMIN_USER}" >> "${INSTALL_FLAG}"
+            echo "status=finalized" >> "${INSTALL_FLAG}"
+            
+            ok "Installation finalized - tables detected and config updated"
+            return 0
+        fi
+        return 0
+    fi
+    return 1
+}
+
+# ─────────────────────────────────────────────────────────────────
 #  MAIN
 # ─────────────────────────────────────────────────────────────────
 main() {
@@ -266,7 +304,17 @@ main() {
     # Always wait for DB
     wait_for_mysql || { err "Failed to connect to MySQL"; exit 1; }
 
-    if [ -f "${INSTALL_FLAG}" ]; then
+    # Check if already installed or can be finalized
+    if check_and_finalize_installation; then
+        ok "osTicket is installed and ready"
+        
+        # MAKE SURE /setup IS REMOVED (prevents setup wizard from running)
+        if [ -d "${WEB_ROOT}/setup" ]; then
+            log "Removing /setup directory for security..."
+            rm -rf "${WEB_ROOT}/setup"
+            ok "/setup directory removed"
+        fi
+    elif [ -f "${INSTALL_FLAG}" ]; then
         # ── Already installed — just start services ───────────────
         ok "osTicket already installed ($(grep installed ${INSTALL_FLAG} | cut -d= -f2))."
         
