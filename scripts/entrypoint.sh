@@ -159,16 +159,7 @@ run_installer() {
 }
 
 # ─────────────────────────────────────────────────────────────────
-#  4. FALLBACK: Direct SQL install (in case CLI installer fails)
-# ─────────────────────────────────────────────────────────────────
-# This function is no longer needed - automated installer handles everything
-# Kept for reference only
-sql_fallback_install_DEPRECATED() {
-    :  # No-op
-}
-
-# ─────────────────────────────────────────────────────────────────
-#  5. POST-INSTALL CLEANUP
+#  4. POST-INSTALL CLEANUP
 # ─────────────────────────────────────────────────────────────────
 post_install_cleanup() {
     log "Running post-install cleanup..."
@@ -198,11 +189,18 @@ post_install_cleanup() {
 
     ok "Config file marked as installed"
 
-    # Delete /setup directory for security
+    # DELETE /setup directory IMMEDIATELY for security (critical for idempotency!)
+    # This must happen before the install flag is written and Apache starts
     if [ -d "${WEB_ROOT}/setup" ]; then
-        log "Removing /setup directory for security..."
+        log "Removing /setup directory for security (CRITICAL - prevents re-installation)..."
         rm -rf "${WEB_ROOT}/setup"
         ok "/setup directory removed"
+    fi
+
+    # Verify /setup is actually gone
+    if [ -d "${WEB_ROOT}/setup" ]; then
+        err "/setup directory still exists - cannot proceed!"
+        return 1
     fi
 
     # Lock the config file
@@ -225,7 +223,7 @@ post_install_cleanup() {
 }
 
 # ─────────────────────────────────────────────────────────────────
-#  6. UPGRADE CHECK (for future version bumps)
+#  5. UPGRADE CHECK (for future version bumps)
 # ─────────────────────────────────────────────────────────────────
 check_upgrade() {
     log "Checking if DB upgrade is needed..."
@@ -235,7 +233,7 @@ check_upgrade() {
 }
 
 # ─────────────────────────────────────────────────────────────────
-#  7. VERIFY INSTALLATION
+#  6. VERIFY INSTALLATION
 # ─────────────────────────────────────────────────────────────────
 verify_install() {
     log "Verifying installation..."
@@ -280,11 +278,19 @@ main() {
             exit 1
         fi
         
-        # Verify /setup directory was removed (security check)
+        # MUST REMOVE /setup BEFORE APACHE STARTS (prevents setup wizard from running)
+        # This is critical for idempotency on every restart
         if [ -d "${WEB_ROOT}/setup" ]; then
-            log "Removing /setup directory for security..."
+            log "Removing /setup directory for security (preventing setup wizard re-trigger)..."
             rm -rf "${WEB_ROOT}/setup"
             ok "/setup directory removed"
+        fi
+        
+        # Verify it's actually gone to prevent accidental re-installation
+        if [ -d "${WEB_ROOT}/setup" ]; then
+            err "/setup directory could not be removed - this will cause setup wizard to appear"
+            err "Manual intervention required: docker exec osticket_app rm -rf /var/www/html/setup"
+            exit 1
         fi
         
         # Validate schema signature

@@ -45,6 +45,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # ── Apache configuration ──────────────────────────────────────────
 RUN a2enmod rewrite headers expires deflate
 
+# Set global ServerName to suppress "Could not reliably determine FQDN" warning
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
 COPY config/apache-osticket.conf /etc/apache2/sites-available/osticket.conf
 RUN a2dissite 000-default.conf && a2ensite osticket.conf
 
