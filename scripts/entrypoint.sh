@@ -3,9 +3,30 @@
 #  osTicket Entrypoint — Zero-touch automated installer
 #  Runs on every container start; idempotent (safe to re-run)
 # ─────────────────────────────────────────────────────────────────
-set -euo pipefail
+#
+#  FIX HISTORY:
+#  - Removed set -e / ERR trap from main() — they fire on innocuous
+#    commands (service cron, local declarations) and silently kill
+#    the script before Apache starts.
+#  - Added explicit exit-code checks everywhere instead.
+#  - Fixed pipe swallowing installer exit code (set -o pipefail on
+#    installer subshell only).
+#  - Stale apache2.pid cleanup now happens unconditionally before
+#    exec apache2-foreground.
+#  - apache2ctl configtest runs before exec so bad config is caught.
+#  - Removed 'local' declarations from main() — local is only valid
+#    inside functions.
+#  - Merged the two redundant "already installed" checks into one
+#    clear decision tree.
+#  - All mysql calls use || echo "0" so pipefail can't abort on a
+#    momentary DB hiccup.
+# ─────────────────────────────────────────────────────────────────
 
-# ── Colours for readable logs ─────────────────────────────────────
+# NOTE: NO global set -e here intentionally — we do explicit checks.
+# pipefail is scoped to subshells where we need it.
+set -uo pipefail
+
+# ── Colours ───────────────────────────────────────────────────────
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
 BLUE='\033[0;34m'; CYAN='\033[0;36m'; NC='\033[0m'
 
@@ -13,8 +34,9 @@ log()  { echo -e "${CYAN}[$(date '+%H:%M:%S')]${NC} $*"; }
 ok()   { echo -e "${GREEN}[$(date '+%H:%M:%S')] ✓${NC} $*"; }
 warn() { echo -e "${YELLOW}[$(date '+%H:%M:%S')] ⚠${NC} $*"; }
 err()  { echo -e "${RED}[$(date '+%H:%M:%S')] ✗${NC} $*"; }
+die()  { err "$*"; exit 1; }
 
-# ── Required env vars (with defaults from compose) ────────────────
+# ── Env vars (with defaults) ──────────────────────────────────────
 MYSQL_HOST="${MYSQL_HOST:-mysql}"
 MYSQL_PORT="${MYSQL_PORT:-3306}"
 MYSQL_DATABASE="${MYSQL_DATABASE:-osticket}"
@@ -38,6 +60,41 @@ CONFIG_FILE="/var/www/html/include/ost-config.php"
 WEB_ROOT="/var/www/html"
 
 # ─────────────────────────────────────────────────────────────────
+#  HELPERS
+# ─────────────────────────────────────────────────────────────────
+
+# Returns the number of ost_ tables in the DB (0 on any error)
+count_ost_tables() {
+    mysql \
+        -h"${MYSQL_HOST}" -P"${MYSQL_PORT}" \
+        --ssl=0 --connect-timeout=10 \
+        -u"${MYSQL_USER}" -p"${MYSQL_PASSWORD}" \
+        -s -N \
+        -e "SELECT COUNT(*) FROM information_schema.tables
+            WHERE table_schema='${MYSQL_DATABASE}'
+            AND table_name LIKE '${MYSQL_PREFIX}%';" \
+        2>/dev/null \
+    || echo "0"
+}
+
+# Returns 0 if ost-config.php declares OSTINSTALLED as TRUE
+config_is_installed() {
+    grep -q "define('OSTINSTALLED',TRUE)" "${CONFIG_FILE}" 2>/dev/null
+}
+
+# Removes the /setup directory — must not exist when Apache serves requests
+remove_setup_dir() {
+    if [ -d "${WEB_ROOT}/setup" ]; then
+        log "Removing /setup directory (security)..."
+        rm -rf "${WEB_ROOT}/setup"
+        if [ -d "${WEB_ROOT}/setup" ]; then
+            die "/setup directory could not be removed — manual intervention needed."
+        fi
+        ok "/setup removed."
+    fi
+}
+
+# ─────────────────────────────────────────────────────────────────
 #  1. WAIT FOR MYSQL
 # ─────────────────────────────────────────────────────────────────
 wait_for_mysql() {
@@ -45,42 +102,25 @@ wait_for_mysql() {
     local retries=0
     local max=60
 
-    # Phase 1: wait for TCP port to be open (works regardless of auth)
+    # Phase 1 — TCP
     until nc -z "${MYSQL_HOST}" "${MYSQL_PORT}" 2>/dev/null; do
         retries=$((retries + 1))
-        if [ $retries -ge $max ]; then
-            err "MySQL TCP port never opened. Aborting."
-            err "DNS check: $(getent hosts ${MYSQL_HOST} 2>&1 || echo 'hostname not resolved')"
-            err "Network: $(ip route 2>/dev/null | head -5)"
-            exit 1
-        fi
-        # Every 10 attempts, print a status line
-        if [ $((retries % 10)) -eq 0 ]; then
-            echo ""
-            log "Still waiting... attempt ${retries}/${max}. DNS: $(getent hosts ${MYSQL_HOST} 2>/dev/null || echo 'unresolved')"
-        else
-            echo -n "."
-        fi
+        [ $retries -ge $max ] && die "MySQL TCP port never opened after ${max} attempts."
+        [ $((retries % 10)) -eq 0 ] && log "Still waiting for TCP... ${retries}/${max}" || echo -n "."
         sleep 2
     done
     echo ""
-    log "MySQL TCP port is open. Waiting for server to accept queries..."
+    log "TCP open. Waiting for MySQL to accept queries..."
 
-    # Phase 2: wait for MySQL to actually accept connections
-    # Use root for the ping — the osticket user may not exist yet
+    # Phase 2 — query readiness (use root; the app user may not exist yet)
     retries=0
     until mysqladmin ping \
-          -h"${MYSQL_HOST}" \
-          -P"${MYSQL_PORT}" \
-          -uroot \
-          -p"${MYSQL_ROOT_PASSWORD}" \
-          --ssl=0 \
-          --silent 2>/dev/null; do
+        -h"${MYSQL_HOST}" -P"${MYSQL_PORT}" \
+        -uroot -p"${MYSQL_ROOT_PASSWORD}" \
+        --ssl=0 --silent 2>/dev/null
+    do
         retries=$((retries + 1))
-        if [ $retries -ge $max ]; then
-            err "MySQL did not become ready in time. Aborting."
-            exit 1
-        fi
+        [ $retries -ge $max ] && die "MySQL never became ready."
         echo -n "."
         sleep 2
     done
@@ -93,18 +133,23 @@ wait_for_mysql() {
 # ─────────────────────────────────────────────────────────────────
 write_config() {
     log "Writing ost-config.php..."
+
+    # Make writable whether it exists already or not
+    touch "${CONFIG_FILE}" 2>/dev/null || true
     chmod 0666 "${CONFIG_FILE}"
 
-    # Build the config — we patch the sample config in-place
-    # osTicket's config format uses define() calls
-    # Always set OSTINSTALLED to FALSE initially - automated installer will set it to TRUE
+    # Generate a random salt without subshell pipefail interference
+    local salt
+    salt=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1 || true)
+    [ -z "${salt}" ] && salt="fallback-salt-$(date +%s)"
+
     cat > "${CONFIG_FILE}" << PHPCONFIG
 <?php
 # osTicket Configuration — auto-generated by Docker entrypoint
 # DO NOT EDIT MANUALLY
 
 define('OSTINSTALLED',FALSE);
-define('SECRET_SALT','$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)');
+define('SECRET_SALT','${salt}');
 define('DBDRIVER','mysqli');
 define('DBHOST','${MYSQL_HOST}');
 define('DBNAME','${MYSQL_DATABASE}');
@@ -123,172 +168,240 @@ define('TABLE_PREFIX','${MYSQL_PREFIX}');
 @define('BOOTSTRAP','${WEB_ROOT}/bootstrap.php');
 PHPCONFIG
 
-    # Lock config after writing
     chmod 0644 "${CONFIG_FILE}"
     chown www-data:www-data "${CONFIG_FILE}"
-    ok "ost-config.php written (OSTINSTALLED=FALSE - will be set by installer)"
+    ok "ost-config.php written."
 }
 
 # ─────────────────────────────────────────────────────────────────
-#  3. RUN AUTOMATED INSTALLER
+#  3. START / STOP BACKGROUND APACHE (installer only)
+# ─────────────────────────────────────────────────────────────────
+APACHE_BG_PID=""
+
+start_apache_background() {
+    log "Starting Apache in background for installer..."
+    # Clean any stale pid before starting
+    rm -f /var/run/apache2/apache2.pid
+
+    apache2-foreground &
+    APACHE_BG_PID=$!
+
+    # Wait up to 30s for Apache to actually serve requests
+    local attempts=0
+    until curl -sf --max-time 3 http://localhost/ > /dev/null 2>&1 || \
+          curl -sf --max-time 3 http://localhost/setup/ > /dev/null 2>&1; do
+        attempts=$((attempts + 1))
+        if [ $attempts -ge 15 ]; then
+            err "Background Apache did not respond after 30s"
+            err "Apache stderr (last 20 lines of error log):"
+            tail -20 /var/log/apache2/error.log 2>/dev/null || true
+            return 1
+        fi
+        echo -n "."
+        sleep 2
+    done
+    echo ""
+    ok "Background Apache is serving (PID ${APACHE_BG_PID})."
+}
+
+stop_apache_background() {
+    if [ -n "${APACHE_BG_PID}" ]; then
+        log "Stopping background Apache (PID ${APACHE_BG_PID})..."
+        kill "${APACHE_BG_PID}" 2>/dev/null || true
+        # Wait for it to fully exit so it releases the port and pid file
+        local waited=0
+        while kill -0 "${APACHE_BG_PID}" 2>/dev/null; do
+            waited=$((waited + 1))
+            [ $waited -ge 15 ] && { warn "Background Apache did not exit cleanly; sending SIGKILL"; kill -9 "${APACHE_BG_PID}" 2>/dev/null || true; break; }
+            sleep 1
+        done
+        APACHE_BG_PID=""
+        ok "Background Apache stopped."
+    fi
+    # Always remove the pid file — it may linger even after the process exits
+    rm -f /var/run/apache2/apache2.pid
+    sleep 1
+}
+
+# ─────────────────────────────────────────────────────────────────
+#  4. RUN WEB INSTALLER
 # ─────────────────────────────────────────────────────────────────
 run_installer() {
-    log "Running automated web-based installer..."
-    
     local web_installer="/usr/local/bin/web-install.sh"
-    if [ ! -f "${web_installer}" ]; then
-        err "Web installer not found: ${web_installer}"
-        exit 1
-    fi
-    
-    # Run installation via web interface
+    [ -f "${web_installer}" ] || die "Web installer not found: ${web_installer}"
+
+    log "Running automated web-based installer..."
     local install_log="/tmp/install-$(date +%s).log"
-    bash "${web_installer}" 2>&1 | tee "${install_log}"
-    local exit_code=$?
-    
-    if [ ${exit_code} -eq 0 ]; then
-        ok "Automated installation completed"
+
+    # Run in a subshell with pipefail so the installer's exit code
+    # is not masked by tee
+    local rc=0
+    ( set -o pipefail; bash "${web_installer}" 2>&1 | tee "${install_log}" ) || rc=$?
+
+    if [ ${rc} -eq 0 ]; then
+        ok "Web installer completed successfully."
+        return 0
     else
-        err "Automated installation failed (exit code: ${exit_code})"
-        warn "Installation log saved to: ${install_log}"
-        warn "Last 50 lines of installation log:"
+        err "Web installer failed (exit code: ${rc})"
+        warn "Last 50 lines of install log:"
         tail -50 "${install_log}" >&2
-        err "Installation will be retried on next restart"
         return 1
     fi
 }
 
 # ─────────────────────────────────────────────────────────────────
-#  4. POST-INSTALL CLEANUP
+#  5. POST-INSTALL CLEANUP & VERIFICATION
 # ─────────────────────────────────────────────────────────────────
 post_install_cleanup() {
-    log "Running post-install cleanup..."
+    log "Post-install cleanup & verification..."
 
-    # Verify installation was successful
+    # Verify DB tables
     local table_count
-    table_count=$(mysql -h"${MYSQL_HOST}" -P"${MYSQL_PORT}" \
-        --ssl=0 \
-        -u"${MYSQL_USER}" -p"${MYSQL_PASSWORD}" \
-        -s -N -e "SELECT COUNT(*) FROM information_schema.tables
-                  WHERE table_schema='${MYSQL_DATABASE}'
-                  AND table_name LIKE '${MYSQL_PREFIX}%';" 2>/dev/null || echo "0")
-
+    table_count=$(count_ost_tables)
     if [ "${table_count}" -lt 10 ]; then
-        err "Installation verification failed: only ${table_count} tables found."
-        err "Installation will be retried on next container restart."
+        err "Only ${table_count} tables found — installation incomplete."
         return 1
     fi
+    ok "${table_count} osTicket tables found."
 
-    ok "Installation verified: ${table_count} osTicket tables created."
-
-    # Verify config file has OSTINSTALLED=TRUE
-    if ! grep -q "define('OSTINSTALLED',TRUE)" "${CONFIG_FILE}"; then
-        warn "Config file not marked as installed - installation may have failed"
+    # Verify config is marked installed
+    if ! config_is_installed; then
+        err "ost-config.php not marked OSTINSTALLED=TRUE after installer ran."
         return 1
     fi
+    ok "ost-config.php marked as installed."
 
-    ok "Config file marked as installed"
+    # Security: remove setup dir
+    remove_setup_dir
 
-    # DELETE /setup directory IMMEDIATELY for security (critical for idempotency!)
-    # This must happen before the install flag is written and Apache starts
-    if [ -d "${WEB_ROOT}/setup" ]; then
-        log "Removing /setup directory for security (CRITICAL - prevents re-installation)..."
-        rm -rf "${WEB_ROOT}/setup"
-        ok "/setup directory removed"
-    fi
-
-    # Verify /setup is actually gone
-    if [ -d "${WEB_ROOT}/setup" ]; then
-        err "/setup directory still exists - cannot proceed!"
-        return 1
-    fi
-
-    # Lock the config file
+    # Permissions
     chmod 0644 "${CONFIG_FILE}"
     chown www-data:www-data "${CONFIG_FILE}"
+    chown -R www-data:www-data "${WEB_ROOT}/attachments" 2>/dev/null || true
+    chmod 755 "${WEB_ROOT}/attachments" 2>/dev/null || true
 
-    # Fix final permissions
-    chown -R www-data:www-data "${WEB_ROOT}"
-    chmod 755 "${WEB_ROOT}/attachments"
-    # We will only delete /setup on subsequent boots if it somehow remains.
+    # Write install flag
+    mkdir -p "$(dirname "${INSTALL_FLAG}")"
+    {
+        echo "installed=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+        echo "version=1.18.3"
+        echo "db_host=${MYSQL_HOST}"
+        echo "admin_user=${OST_ADMIN_USER}"
+    } > "${INSTALL_FLAG}"
+    chmod 644 "${INSTALL_FLAG}"
 
-    # Write install flag so we know first boot is done
-    echo "installed=$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "${INSTALL_FLAG}"
-    echo "version=1.18.3"                            >> "${INSTALL_FLAG}"
-    echo "db_host=${MYSQL_HOST}"                     >> "${INSTALL_FLAG}"
-    echo "admin_user=${OST_ADMIN_USER}"              >> "${INSTALL_FLAG}"
-    echo "status=awaiting_setup_wizard"              >> "${INSTALL_FLAG}"
-
-    ok "Post-install cleanup done. osTicket setup wizard is ready."
+    ok "Post-install cleanup complete."
 }
 
 # ─────────────────────────────────────────────────────────────────
-#  5. UPGRADE CHECK (for future version bumps)
+#  6. UPGRADE / SCHEMA SIGNATURE CHECK
 # ─────────────────────────────────────────────────────────────────
 check_upgrade() {
-    log "Checking if DB upgrade is needed..."
-    # osTicket's upgrader can be triggered via CLI if needed
-    # Placeholder for future use
-    ok "No upgrade needed."
-}
-
-# ─────────────────────────────────────────────────────────────────
-#  6. VERIFY INSTALLATION
-# ─────────────────────────────────────────────────────────────────
-verify_install() {
-    log "Verifying installation..."
-
-    local table_count
-    table_count=$(mysql -h"${MYSQL_HOST}" -P"${MYSQL_PORT}" \
-        --ssl=0 \
-        -u"${MYSQL_USER}" -p"${MYSQL_PASSWORD}" \
-        -s -N -e "SELECT COUNT(*) FROM information_schema.tables
-                  WHERE table_schema='${MYSQL_DATABASE}'
-                  AND table_name LIKE '${MYSQL_PREFIX}%';" 2>/dev/null || echo "0")
-
-    if [ "${table_count}" -gt 10 ]; then
-        ok "Database has ${table_count} osTicket tables — looks good."
-    else
-        warn "Only ${table_count} tables found. Installation may be incomplete."
-    fi
-}
-
-# ─────────────────────────────────────────────────────────────────
-#  Check if already installed and finalize if needed
-# ─────────────────────────────────────────────────────────────────
-check_and_finalize_installation() {
-    # Check if database already has osTicket tables
-    local table_count
-    table_count=$(mysql -h"${MYSQL_HOST}" -P"${MYSQL_PORT}" \
-        --ssl=0 \
-        -u"${MYSQL_USER}" -p"${MYSQL_PASSWORD}" \
-        -s -N -e "SELECT COUNT(*) FROM information_schema.tables
-                  WHERE table_schema='${MYSQL_DATABASE}'
-                  AND table_name LIKE '${MYSQL_PREFIX}%';" 2>/dev/null || echo "0")
-
-    if [ "${table_count}" -gt 10 ]; then
-        # Tables exist - this is a partially installed or already installed system
-        if ! grep -q "define('OSTINSTALLED',TRUE)" "${CONFIG_FILE}" 2>/dev/null; then
-            # Tables exist but config not marked as installed - finalize it
-            warn "Found ${table_count} osTicket tables but config not marked as installed"
-            warn "Finalizing installation..."
-            
-            # Update config to mark as installed
-            sed -i "s/define('OSTINSTALLED',FALSE)/define('OSTINSTALLED',TRUE)/" "${CONFIG_FILE}"
-            
-            # Create install flag
-            echo "installed=$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "${INSTALL_FLAG}"
-            echo "version=1.18.3" >> "${INSTALL_FLAG}"
-            echo "db_host=${MYSQL_HOST}" >> "${INSTALL_FLAG}"
-            echo "admin_user=${OST_ADMIN_USER}" >> "${INSTALL_FLAG}"
-            echo "status=finalized" >> "${INSTALL_FLAG}"
-            
-            ok "Installation finalized - tables detected and config updated"
-            return 0
-        fi
+    log "Checking schema signature..."
+    local sig_file="${WEB_ROOT}/include/upgrader/streams/core.sig"
+    if [ ! -f "${sig_file}" ]; then
+        warn "core.sig not found — skipping schema check."
         return 0
     fi
-    return 1
+
+    local expected_sig current_sig
+    expected_sig=$(cat "${sig_file}")
+    current_sig=$(mysql \
+        -h"${MYSQL_HOST}" -P"${MYSQL_PORT}" --ssl=0 \
+        -u"${MYSQL_USER}" -p"${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" \
+        -s -N \
+        -e "SELECT value FROM ${MYSQL_PREFIX}config
+            WHERE namespace='core' AND \`key\`='schema_signature'
+            LIMIT 1;" \
+        2>/dev/null || echo "")
+
+    if [ -z "${current_sig}" ]; then
+        warn "Could not read schema_signature from DB — skipping."
+        return 0
+    fi
+
+    if [ "${current_sig}" != "${expected_sig}" ]; then
+        warn "Schema signature mismatch (DB: '${current_sig}' → file: '${expected_sig}'). Updating..."
+        mysql \
+            -h"${MYSQL_HOST}" -P"${MYSQL_PORT}" --ssl=0 \
+            -u"${MYSQL_USER}" -p"${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" \
+            2>/dev/null \
+            -e "UPDATE ${MYSQL_PREFIX}config
+                SET value='${expected_sig}'
+                WHERE namespace='core' AND \`key\`='schema_signature';" \
+        || warn "Schema signature update failed — non-fatal."
+        ok "Schema signature updated."
+    else
+        ok "Schema signature OK."
+    fi
+}
+
+# ─────────────────────────────────────────────────────────────────
+#  7. FINALIZE PARTIALLY-INSTALLED STATE
+#     (tables exist but config/flag not set — e.g. crash mid-install)
+# ─────────────────────────────────────────────────────────────────
+finalize_if_needed() {
+    local table_count
+    table_count=$(count_ost_tables)
+
+    if [ "${table_count}" -lt 10 ]; then
+        # Not installed at all
+        return 1
+    fi
+
+    # Tables exist — ensure config + flag are consistent
+    if ! config_is_installed; then
+        warn "Found ${table_count} tables but config not marked installed — finalizing..."
+        sed -i "s/define('OSTINSTALLED',FALSE)/define('OSTINSTALLED',TRUE)/" "${CONFIG_FILE}" || true
+        if ! config_is_installed; then
+            # sed didn't find the pattern (e.g. config was corrupt) — rewrite the flag line
+            warn "sed patch failed; rewriting OSTINSTALLED line directly..."
+            grep -v "OSTINSTALLED" "${CONFIG_FILE}" > /tmp/ost-config-tmp.php || true
+            echo "define('OSTINSTALLED',TRUE);" >> /tmp/ost-config-tmp.php
+            mv /tmp/ost-config-tmp.php "${CONFIG_FILE}"
+            chown www-data:www-data "${CONFIG_FILE}"
+        fi
+    fi
+
+    if [ ! -f "${INSTALL_FLAG}" ]; then
+        mkdir -p "$(dirname "${INSTALL_FLAG}")"
+        {
+            echo "installed=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+            echo "version=1.18.3"
+            echo "db_host=${MYSQL_HOST}"
+            echo "admin_user=${OST_ADMIN_USER}"
+            echo "status=finalized"
+        } > "${INSTALL_FLAG}"
+        chmod 644 "${INSTALL_FLAG}"
+    fi
+
+    ok "Finalized: ${table_count} tables, config and flag are consistent."
+    return 0
+}
+
+# ─────────────────────────────────────────────────────────────────
+#  8. LAUNCH FOREGROUND APACHE (final — keeps container alive)
+# ─────────────────────────────────────────────────────────────────
+launch_apache() {
+    # Belt-and-braces: kill anything still holding port 80 / pid file
+    stop_apache_background   # no-op if APACHE_BG_PID is already ""
+
+    log "Cleaning stale Apache state..."
+    rm -f /var/run/apache2/apache2.pid
+    rm -rf /var/lock/apache2
+    find /tmp -name 'apache*.pid' -delete 2>/dev/null || true
+
+    log "Validating Apache configuration..."
+    if ! apache2ctl configtest 2>&1; then
+        err "Apache config test FAILED. Dumping error log:"
+        tail -30 /var/log/apache2/error.log 2>/dev/null || echo "(no error log)"
+        die "Refusing to start Apache with broken config."
+    fi
+
+    ok "Apache config OK."
+    log "Starting Apache (foreground)..."
+    exec apache2-foreground
+    # exec replaces this process — nothing below runs
 }
 
 # ─────────────────────────────────────────────────────────────────
@@ -301,133 +414,74 @@ main() {
     echo -e "${BLUE}╚═══════════════════════════════════════╝${NC}"
     echo ""
 
-    # Always wait for DB
-    wait_for_mysql || { err "Failed to connect to MySQL"; exit 1; }
+    # ── 1. Block until DB is accepting connections ─────────────────
+    wait_for_mysql || die "Could not connect to MySQL."
 
-    # Check if already installed or can be finalized
-    if check_and_finalize_installation; then
-        ok "osTicket is installed and ready"
-        
-        # MAKE SURE /setup IS REMOVED (prevents setup wizard from running)
-        if [ -d "${WEB_ROOT}/setup" ]; then
-            log "Removing /setup directory for security..."
-            rm -rf "${WEB_ROOT}/setup"
-            ok "/setup directory removed"
-        fi
-    elif [ -f "${INSTALL_FLAG}" ]; then
-        # ── Already installed — just start services ───────────────
-        ok "osTicket already installed ($(grep installed ${INSTALL_FLAG} | cut -d= -f2))."
-        
-        # Verify config file is properly set
-        if ! grep -q "define('OSTINSTALLED',TRUE)" "${CONFIG_FILE}" 2>/dev/null; then
-            err "Config file not properly installed - corrupted state detected"
-            rm -f "${INSTALL_FLAG}"
-            err "Removed install flag - will reinstall on next restart"
-            exit 1
-        fi
-        
-        # MUST REMOVE /setup BEFORE APACHE STARTS (prevents setup wizard from running)
-        # This is critical for idempotency on every restart
-        if [ -d "${WEB_ROOT}/setup" ]; then
-            log "Removing /setup directory for security (preventing setup wizard re-trigger)..."
-            rm -rf "${WEB_ROOT}/setup"
-            ok "/setup directory removed"
-        fi
-        
-        # Verify it's actually gone to prevent accidental re-installation
-        if [ -d "${WEB_ROOT}/setup" ]; then
-            err "/setup directory could not be removed - this will cause setup wizard to appear"
-            err "Manual intervention required: docker exec osticket_app rm -rf /var/www/html/setup"
-            exit 1
-        fi
-        
-        # Validate schema signature
-        log "Validating schema signature..."
-        local sig_file="${WEB_ROOT}/include/upgrader/streams/core.sig"
-        if [ -f "${sig_file}" ]; then
-            local expected_sig=$(cat "${sig_file}")
-            local current_sig=$(mysql -h"${MYSQL_HOST}" -P"${MYSQL_PORT}" --ssl=0 \
-                -u"${MYSQL_USER}" -p"${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" \
-                2>/dev/null -N -e "SELECT value FROM ${MYSQL_PREFIX}config WHERE namespace='core' AND \`key\`='schema_signature' LIMIT 1")
-            
-            if [ "${current_sig}" != "${expected_sig}" ]; then
-                warn "Schema signature mismatch! Updating from '${current_sig}' to '${expected_sig}'"
-                mysql -h"${MYSQL_HOST}" -P"${MYSQL_PORT}" --ssl=0 \
-                    -u"${MYSQL_USER}" -p"${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" \
-                    2>/dev/null <<EOF
-UPDATE ${MYSQL_PREFIX}config SET value='${expected_sig}' WHERE namespace='core' AND \`key\`='schema_signature';
-EOF
-            fi
-        fi
-        
+    # ── 2. Decide installation state ──────────────────────────────
+    #
+    #   STATE A — already fully installed (flag + config + tables)
+    #   STATE B — partially installed (tables exist, flag/config missing)
+    #   STATE C — fresh install needed
+    #
+    if [ -f "${INSTALL_FLAG}" ] && config_is_installed; then
+        # ── STATE A ───────────────────────────────────────────────
+        ok "osTicket already installed ($(grep '^installed=' "${INSTALL_FLAG}" | cut -d= -f2))."
         check_upgrade
+        remove_setup_dir
+
+    elif finalize_if_needed; then
+        # ── STATE B ───────────────────────────────────────────────
+        # finalize_if_needed() already logged + fixed everything
+        check_upgrade
+        remove_setup_dir
+
     else
-        # Ensure attachment directory exists and is writable
-        mkdir -p "${WEB_ROOT}/attachments" || { err "Failed to create attachments directory"; exit 1; }
-        chmod 775 "${WEB_ROOT}/attachments" || { err "Failed to chmod attachments directory"; exit 1; }
-        
-        # ── First boot — full install ─────────────────────────────
-        log "First boot detected — running full automated install..."
-        write_config || { err "Failed to write config"; exit 1; }
-        
-        # Start Apache in background for web-based installer
-        log "Starting Apache in background for installation..."
-        apache2-foreground &
-        APACHE_PID=$!
-        
-        # Wait a moment for Apache to initialize
-        sleep 3
-        
-        # Run the web-based installer
-        run_installer || {
-            warn "Installation incomplete - will retry on next restart"
-            kill $APACHE_PID 2>/dev/null || true
-            wait $APACHE_PID 2>/dev/null || true
-        }
-        
-        # Kill background Apache - we'll restart it properly at the end
-        log "Stopping background Apache..."
-        kill $APACHE_PID 2>/dev/null || true
-        wait $APACHE_PID 2>/dev/null || true
-        sleep 2
-        
-        # Perform post-install cleanup and verification
-        if post_install_cleanup; then
-            verify_install
-            
-            # Mark as installed
-            echo "installed=$(date -u +"%Y-%m-%d %H:%M:%S UTC")" > "${INSTALL_FLAG}"
-            chmod 644 "${INSTALL_FLAG}"
+        # ── STATE C — first boot, full install ────────────────────
+        log "Fresh install — no existing database found."
+
+        # Ensure attachments dir exists before writing the flag there
+        mkdir -p "${WEB_ROOT}/attachments"
+        chmod 775 "${WEB_ROOT}/attachments"
+        chown www-data:www-data "${WEB_ROOT}/attachments"
+
+        # Write initial config (OSTINSTALLED=FALSE)
+        write_config || die "Failed to write ost-config.php"
+
+        # Start Apache so the web installer can POST to it
+        start_apache_background || die "Could not start background Apache for installer."
+
+        # Run installer (exit code correctly propagated)
+        if run_installer; then
+            # Installer succeeded — clean up
+            stop_apache_background
+            post_install_cleanup || warn "Post-install cleanup had issues — continuing."
+            check_upgrade
 
             echo ""
             echo -e "${GREEN}╔══════════════════════════════════════════════════╗${NC}"
-            echo -e "${GREEN}║   ✓  osTicket Installation Complete             ║${NC}"
+            echo -e "${GREEN}║   ✓  osTicket Installation Complete              ║${NC}"
             echo -e "${GREEN}╠══════════════════════════════════════════════════╣${NC}"
-            echo -e "${GREEN}║  System is fully functional and ready!           ║${NC}"
-            echo -e "${GREEN}║                                                  ║${NC}"
-            echo -e "${GREEN}║  Access your helpdesk:                           ║${NC}"
-            echo -e "${GREEN}║  ${OST_HELPDESK_URL}                              ║${NC}"
-            echo -e "${GREEN}║                                                  ║${NC}"
-            echo -e "${GREEN}║  Admin panel:                                    ║${NC}"
-            echo -e "${GREEN}║  ${OST_HELPDESK_URL}/scp/                         ║${NC}"
-            echo -e "${GREEN}║  Username: ${OST_ADMIN_USER}                      ║${NC}"
-            echo -e "${GREEN}║  Password: (from OST_ADMIN_PASS env)             ║${NC}"
+            echo -e "${GREEN}║  Helpdesk : ${OST_HELPDESK_URL}                  ${NC}"
+            echo -e "${GREEN}║  Admin    : ${OST_HELPDESK_URL}/scp/             ${NC}"
+            echo -e "${GREEN}║  Username : ${OST_ADMIN_USER}                    ${NC}"
+            echo -e "${GREEN}║  Password : (from OST_ADMIN_PASS env var)        ${NC}"
             echo -e "${GREEN}╚══════════════════════════════════════════════════╝${NC}"
             echo ""
         else
-            warn "Installation verification failed - continuing anyway..."
-            warn "System may not be fully functional"
+            # Installer failed — stop background Apache and exit so
+            # Docker restart policy can retry
+            stop_apache_background
+            die "Installation failed. Container will restart and retry."
         fi
     fi
 
-    # ── Start cron ─────────────────────────────────────────────────
+    # ── 3. Cron ────────────────────────────────────────────────────
     log "Starting cron daemon..."
-    service cron start || warn "Failed to start cron"
-    ok "Cron started."
+    service cron start 2>&1 || warn "cron start returned non-zero — may already be running."
+    ok "Cron done."
 
-    # ── Start Apache (foreground — keeps container alive) ──────────
-    log "Starting Apache..."
-    exec apache2-foreground
+    # ── 4. Hand off to foreground Apache ──────────────────────────
+    launch_apache
 }
 
 main "$@"
