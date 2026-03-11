@@ -82,6 +82,11 @@ config_is_installed() {
     grep -q "define('OSTINSTALLED',TRUE)" "${CONFIG_FILE}" 2>/dev/null
 }
 
+# Returns 0 if config has template placeholders instead of real values
+config_has_placeholders() {
+    grep -q '%CONFIG-' "${CONFIG_FILE}" 2>/dev/null
+}
+
 # Removes the /setup directory — must not exist when Apache serves requests
 remove_setup_dir() {
     if [ -d "${WEB_ROOT}/setup" ]; then
@@ -416,6 +421,12 @@ main() {
 
     # ── 1. Block until DB is accepting connections ─────────────────
     wait_for_mysql || die "Could not connect to MySQL."
+
+    # ── 1.5. Detect and fix invalid config (template placeholders) ──
+    if [ -f "${CONFIG_FILE}" ] && config_has_placeholders; then
+        warn "Config file has template placeholders — rewriting with actual database credentials..."
+        write_config || die "Failed to rewrite ost-config.php with credentials."
+    fi
 
     # ── 2. Decide installation state ──────────────────────────────
     #
