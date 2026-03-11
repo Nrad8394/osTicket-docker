@@ -64,6 +64,13 @@ RUN mkdir -p /var/www/html/include/upgrader/streams/core && \
     cp -r /var/www/html/setup/inc/streams/core/* /var/www/html/include/upgrader/streams/core/ && \
     md5sum /var/www/html/include/upgrader/streams/core/install-mysql.sql | awk '{print $1}' > /var/www/html/include/upgrader/streams/core.sig
 
+# ── Copy and apply patches to fix osTicket bugs ──
+COPY patches/ /tmp/patches/
+RUN php /tmp/patches/01-fix-i18n-redeclaration.php \
+    && php /tmp/patches/02-fix-namespace-functions.php \
+    && php /tmp/patches/03-early-bootstrap-call.php \
+    && rm -rf /tmp/patches
+
 # ── Config file — writable for installer, then locked after setup ─
 RUN cp /var/www/html/include/ost-sampleconfig.php \
        /var/www/html/include/ost-config.php \
