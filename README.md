@@ -56,7 +56,7 @@ docker-compose logs -f osticket
 # Wait for: ✓ INSTALLATION COMPLETE
 
 # 4. Open your browser
-open http://localhost:8080
+open http://localhost:8082
 
 # 5. Log in with admin credentials
 # Initial admin: ostadmin / Adm1nP@ss! (from .env)
@@ -165,8 +165,8 @@ All settings live in `.env`. Edit before first boot:
 | `OST_ADMIN_PASS`     | Admin password (for login)           | `Adm1nP@ss!`         |
 | `OST_SITE_NAME`      | Helpdesk display name                | `Support Center`     |
 | `OST_SITE_EMAIL`     | Default sender email                 | `support@example.com`|
-| `OST_HELPDESK_URL`   | Public URL of your helpdesk          | `http://localhost:8080`|
-| `APP_PORT`           | Host port to expose osTicket on      | `8080`               |
+| `OST_HELPDESK_URL`   | Public URL of your helpdesk          | `http://localhost:8082`|
+| `APP_PORT`           | Host port to expose osTicket on      | `8082`               |
 
 ---
 
