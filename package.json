@@ -1,0 +1,25 @@
+{
+  "name": "osticket-docker",
+  "version": "1.0.0",
+  "description": "Osticket Project",
+  "homepage": "https://github.com/Nrad8394/osTicket-docker#readme",
+  "bugs": {
+    "url": "https://github.com/Nrad8394/osTicket-docker/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nrad8394/osTicket-docker.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {},
+  "dependencies": {
+    "playwright": "^1.58.2"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.5.0"
+  }
+}
