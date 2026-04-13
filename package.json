@@ -14,12 +14,22 @@
   "author": "",
   "type": "commonjs",
   "main": "index.js",
-  "scripts": {},
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "record:sla": "node -e \"require('fs').mkdirSync('tests',{recursive:true})\" && playwright codegen --target javascript --output tests/sla_recording.js http://10.153.1.189/",
+    "record:requester": "node -e \"require('fs').mkdirSync('guides/requester',{recursive:true})\" && playwright codegen --target javascript --output guides/requester/requester_recording.js http://10.153.1.189/",
+    "record:manager": "node -e \"require('fs').mkdirSync('guides/manager',{recursive:true})\" && playwright codegen --target javascript --output guides/manager/manager_recording.js http://10.153.1.189/",
+    "run:sla": "node tests/sla_recording.js",
+    "run:requester": "node guides/requester/requester_recording.js",
+    "run:manager": "node guides/manager/manager_recording.js"
+  },
   "dependencies": {
     "playwright": "^1.58.2"
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
-    "@types/node": "^25.5.0"
+    "@types/node": "^25.5.2"
   }
 }
