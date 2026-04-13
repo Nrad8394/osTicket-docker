@@ -17,6 +17,7 @@ UAT verifies:
 ## Who Performs It
 
 **Primary owner:** Requester / Business representative  
+**QA role:** Gatekeeper and coordinator (authorizes UAT only after QA pass)  
 **Supporting roles:** Support Analyst, DEV Manager, Developer
 
 ---
@@ -25,7 +26,7 @@ UAT verifies:
 
 Execute UAT after:
 
-1. Ticket is marked **Released** (or deployed to UAT/test environment)
+1. QA validates the release package and marks the build as **QA Pass**
 2. Release package instructions are available
 3. Test data and access are ready
 
@@ -69,7 +70,7 @@ Date:
 - **PASS:** Core business scenarios succeed, no critical defects remain.
 - **FAIL:** Any critical business path fails, data integrity concerns exist, or key requirements are unmet.
 
-If UAT fails, update the ticket and return it to development (often **Failed QA** or equivalent rework state).
+If UAT fails, update the ticket and return it for corrective development with QA tracking the re-validation cycle.
 
 ---
 

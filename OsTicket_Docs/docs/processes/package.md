@@ -1,6 +1,6 @@
 # Release Package
 
-A **Release Package** is the delivery bundle prepared by the developer for QA and deployment.
+A **Release Package** is the delivery bundle prepared by the developer for QA validation and deployment readiness.
 
 ---
 
@@ -9,7 +9,7 @@ A **Release Package** is the delivery bundle prepared by the developer for QA an
 The package provides everything required to:
 
 - Deploy the change consistently
-- Validate it in QA/UAT
+- Validate it in QA and then UAT
 - Trace exactly what was delivered
 
 ---
@@ -85,4 +85,7 @@ Example: `1047_ITAX_20260413_v1.8.4`
 
 ## Output to Next Stage
 
-The requester executes structured validation using the [UAT](uat.md) artefact.
+QA performs the first gate decision:
+
+- If validation fails, QA issues a failure report and returns the ticket for rework.
+- If validation passes, QA initiates structured business validation using the [UAT](uat.md) artefact.

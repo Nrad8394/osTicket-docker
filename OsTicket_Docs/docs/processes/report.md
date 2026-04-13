@@ -2,6 +2,8 @@
 
 The **Resolution Report** is the final operational summary that closes the loop between support, development, QA, and the requester.
 
+> Note: QA also produces a **QA Failure Report** whenever package/build validation fails. The document on this page is the final closure report.
+
 ---
 
 ## Purpose
@@ -18,8 +20,8 @@ It becomes the historical reference for audits and future incident analysis.
 
 ## Who Creates It
 
-**Primary owner:** Support Analyst  
-**Inputs from:** DEV Manager, Developer, Requester/UAT representative
+**Primary owner:** Support Analyst (final closure report)  
+**Inputs from:** QA decision, DEV Manager, Developer, Requester/UAT representative
 
 ---
 
@@ -27,7 +29,7 @@ It becomes the historical reference for audits and future incident analysis.
 
 Create after:
 
-1. QA/UAT result is available
+1. QA decision and UAT result are available
 2. Deployment state is known
 3. Requester confirmation has been received (where applicable)
 

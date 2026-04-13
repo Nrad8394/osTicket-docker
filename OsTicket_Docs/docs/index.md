@@ -38,10 +38,11 @@ The documentation follows the organization workflow shown below.
 3. **Support Analyst** investigates and handles first-line support
 4. If a change is required, the ticket becomes an RFC and moves into the development path
 5. **DEV Manager** reviews and assigns technical work
-6. **Developer** implements the fix and returns it for validation
-7. The change goes through QA and user validation
-8. If QA fails, the ticket returns for rework
-9. If deployment succeeds, the ticket is resolved and then closed after confirmation
+6. **Developer** implements the fix and submits the release package
+7. **QA** validates the package and decides whether development is complete
+8. If QA fails, QA raises a failure report and returns the ticket for rework
+9. If QA passes, QA initiates UAT with the requester/business representative
+10. If deployment succeeds, the ticket is resolved and then closed after confirmation
 
 ## User guides
 
@@ -80,10 +81,18 @@ Read: [DEV Manager Guide](Users/dev_manager_guide.md)
 ### Developer
 - Implements the technical change
 - Records technical notes
-- Returns the ticket ready for QA and release
+- Delivers a release package for QA validation
 - Supports rework when QA fails
 
 Read: [Developer Guide](Users/developer_guide.md)
+
+### QA
+- Reviews the developer release package and build evidence
+- Decides if development is complete for the submitted ticket
+- Writes a QA failure report when validation fails
+- Initiates/coordinates UAT when QA validation passes
+
+Read: [QA Guide](Users/qa_guide.md)
 
 ## Ticket statuses used in the live system
 

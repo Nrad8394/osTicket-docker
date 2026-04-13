@@ -80,6 +80,7 @@ nav:
       - BAS Manager: Users/bas_manager_guide.md
       - DEV Manager: Users/dev_manager_guide.md
       - Developer: Users/developer_guide.md
+      - QA: Users/qa_guide.md
   - Process Documents:
       - Problem Statement: processes/problem_statement.md
       - Request for Change (RFC): processes/rfc.md

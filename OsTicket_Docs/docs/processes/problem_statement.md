@@ -110,5 +110,5 @@ Attachments:
 |---|---|---|
 | [RFC](rfc.md) | DEV Manager | When development work is approved |
 | [Package](package.md) | Developer | When implementation is complete |
-| [UAT](uat.md) | Requester | When fix is deployed to test |
-| [Report](report.md) | Support Analyst | After QA result |
+| [UAT](uat.md) | Requester (initiated by QA) | After QA pass |
+| [Report](report.md) | QA (failure) / Support Analyst (final closure) | After QA decision and UAT outcome |
