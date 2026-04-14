@@ -54,14 +54,6 @@ The documentation follows the organization workflow shown below.
 
 Read: [Requester Guide](Users/requester_guide.md)
 
-### Support Analyst
-- Investigates and triages assigned tickets
-- Communicates with the requester
-- Resolves straightforward issues or escalates to development
-- Coordinates validation and marks tickets resolved
-
-Read: [Support Analyst Guide](Users/support_analyst_guide.md)
-
 ### BAS Manager
 - Reviews intake and routing
 - Assigns the right analyst or business path
@@ -69,6 +61,14 @@ Read: [Support Analyst Guide](Users/support_analyst_guide.md)
 - Confirms closure readiness
 
 Read: [BAS Manager Guide](Users/bas_manager_guide.md)
+
+### Support Analyst
+- Investigates and triages assigned tickets
+- Communicates with the requester
+- Resolves straightforward issues or escalates to development
+- Coordinates validation and marks tickets resolved
+
+Read: [Support Analyst Guide](Users/support_analyst_guide.md)
 
 ### DEV Manager
 - Reviews technical escalations
