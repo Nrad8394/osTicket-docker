@@ -8,32 +8,27 @@ class AutoStatusPlugin extends Plugin {
 
     var $config_class = 'AutoStatusConfig';
 
-    /**
-     * Called by osTicket once per request when the plugin is active.
-     * We hook the model.updated signal so we catch every assignment change,
-     * whether it came from the UI, a filter, the API, or another plugin.
-     */
     function bootstrap() {
-        // Debug: write to file to verify bootstrap is called
-        file_put_contents('/tmp/autostatus-debug.log', "[" . date('Y-m-d H:i:s') . "] bootstrap() called\n", FILE_APPEND);
-        
-        // Register the signal handler
+        $this->log('bootstrap() called');
+
         if (class_exists('Signal')) {
             Signal::connect('model.updated', array($this, 'onModelUpdated'));
             Signal::connect('object.edited', array($this, 'onObjectEdited'));
-            file_put_contents('/tmp/autostatus-debug.log', "[" . date('Y-m-d H:i:s') . "] Signal handler registered\n", FILE_APPEND);
+            $this->log('Signal handlers registered');
         } else {
-            file_put_contents('/tmp/autostatus-debug.log', "[" . date('Y-m-d H:i:s') . "] ERROR: Signal class not found!\n", FILE_APPEND);
+            $this->log('ERROR: Signal class not found!');
         }
     }
+
+    // ---------------------------------------------------------------
+    // Helpers: value extraction
+    // ---------------------------------------------------------------
 
     private function valueToId($value) {
         if (is_object($value) && method_exists($value, 'getId'))
             return (int) $value->getId();
-
         if (is_array($value) && isset($value['id']))
             return (int) $value['id'];
-
         return (int) $value;
     }
 
@@ -42,7 +37,6 @@ class AutoStatusPlugin extends Plugin {
             if (array_key_exists($key, $dirty))
                 return $this->valueToId($dirty[$key]);
         }
-
         return $fallback;
     }
 
@@ -53,15 +47,12 @@ class AutoStatusPlugin extends Plugin {
         if (is_array($raw)) {
             if (empty($raw))
                 return 0;
-
             $keys = array_keys($raw);
             if (isset($keys[0]) && is_numeric($keys[0]))
                 return (int) $keys[0];
-
             $first = reset($raw);
             if (is_numeric($first))
                 return (int) $first;
-
             return 0;
         }
 
@@ -69,13 +60,11 @@ class AutoStatusPlugin extends Plugin {
             $trim = trim($raw);
             if ($trim === '')
                 return 0;
-
             if ($trim[0] === '{' || $trim[0] === '[') {
                 $decoded = json_decode($trim, true);
                 if (json_last_error() === JSON_ERROR_NONE)
                     return $this->extractStatusId($decoded);
             }
-
             if (is_numeric($trim))
                 return (int) $trim;
         }
@@ -94,13 +83,11 @@ class AutoStatusPlugin extends Plugin {
             $trim = trim($raw);
             if ($trim === '')
                 return array();
-
             if ($trim[0] === '{' || $trim[0] === '[') {
                 $decoded = json_decode($trim, true);
                 if (json_last_error() === JSON_ERROR_NONE)
                     return $this->extractIds($decoded);
             }
-
             $parts = array_map('trim', explode(',', $trim));
             $ids = array();
             foreach ($parts as $p) {
@@ -118,10 +105,9 @@ class AutoStatusPlugin extends Plugin {
                 if (is_numeric($v))
                     $ids[] = (int) $v;
             }
-            $ids = array_values(array_unique(array_filter($ids, function($x) {
+            return array_values(array_unique(array_filter($ids, function ($x) {
                 return $x > 0;
             })));
-            return $ids;
         }
 
         return array();
@@ -129,27 +115,28 @@ class AutoStatusPlugin extends Plugin {
 
     private function getAssigneeRoleIds($object) {
         $ids = array();
-
         if ($object->getStaffId() && ($staff = $object->getStaff())) {
             if (!empty($staff->role_id))
                 $ids[] = (int) $staff->role_id;
-        }
-        elseif ($object->getTeamId() && ($team = $object->getTeam())) {
+        } elseif ($object->getTeamId() && ($team = $object->getTeam())) {
             if (($lead = $team->getTeamLead()) && !empty($lead->role_id))
                 $ids[] = (int) $lead->role_id;
         }
-
         return array_values(array_unique(array_filter($ids)));
     }
 
-    private function getRuleCount() {
-        $raw = $this->getConfigRawValue('rule_count', '1');
-        $count = (int) $raw;
-        if ($count < 1)
-            $count = 1;
-        if ($count > 50)
-            $count = 50;
-        return $count;
+    // ---------------------------------------------------------------
+    // Rule resolution (auto-detect rule count)
+    // ---------------------------------------------------------------
+
+    private function getLastFilledRule() {
+        for ($i = 50; $i >= 1; $i--) {
+            if ($this->getConfigRawValue('rule_'.$i.'_enabled', 0)
+                    || $this->getConfigRawValue('rule_'.$i.'_target_status', '')
+                    || $this->getConfigRawValue('rule_'.$i.'_name', ''))
+                return $i;
+        }
+        return 0;
     }
 
     private function isTruthy($value) {
@@ -162,11 +149,11 @@ class AutoStatusPlugin extends Plugin {
     }
 
     private function resolveStructuredRuleTargetStatusId($object) {
-        $currentId = (int) $object->getStatusId();
+        $currentId      = (int) $object->getStatusId();
         $currentStaffId = (int) $object->getStaffId();
-        $currentTeamId = (int) $object->getTeamId();
+        $currentTeamId  = (int) $object->getTeamId();
         $assigneeRoleIds = $this->getAssigneeRoleIds($object);
-        $ruleCount = $this->getRuleCount();
+        $ruleCount      = $this->getLastFilledRule();
 
         for ($i = 1; $i <= $ruleCount; $i++) {
             if (!$this->isTruthy($this->getConfigRawValue('rule_'.$i.'_enabled', 0)))
@@ -198,7 +185,7 @@ class AutoStatusPlugin extends Plugin {
             if (!$targetId)
                 continue;
 
-            file_put_contents('/tmp/autostatus-debug.log', "[" . date('Y-m-d H:i:s') . "] structured rule matched #" . $i . " target=" . $targetId . "\n", FILE_APPEND);
+            $this->log('structured rule matched #' . $i . ' target=' . $targetId);
             return $targetId;
         }
 
@@ -209,11 +196,10 @@ class AutoStatusPlugin extends Plugin {
         $cfg = $this->getConfig();
         $val = $cfg ? $cfg->get($key) : null;
 
-        // Prefer loaded config when present
         if ($val !== null)
             return $val;
 
-        // Fallback to DB lookup by active plugin instance namespace
+        // Fallback: direct DB lookup by plugin instance namespace
         $namespace = null;
         if ($cfg && method_exists($cfg, 'getInstance')) {
             $instance = $cfg->getInstance();
@@ -227,7 +213,8 @@ class AutoStatusPlugin extends Plugin {
                 . ' AND (flags & ' . PluginInstance::FLAG_ENABLED . ') > 0'
                 . ' ORDER BY id LIMIT 1';
             if (($res = db_query($sql)) && ($row = db_fetch_row($res)))
-                $namespace = sprintf('plugin.%d.instance.%d', (int) $this->getId(), (int) $row[0]);
+                $namespace = sprintf('plugin.%d.instance.%d',
+                    (int) $this->getId(), (int) $row[0]);
         }
 
         if ($namespace) {
@@ -241,6 +228,10 @@ class AutoStatusPlugin extends Plugin {
 
         return $default;
     }
+
+    // ---------------------------------------------------------------
+    // Status application
+    // ---------------------------------------------------------------
 
     private function syncStatusInDb($ticketId, $targetId, $reason) {
         $sql = 'UPDATE ' . TICKET_TABLE
@@ -257,123 +248,114 @@ class AutoStatusPlugin extends Plugin {
         if (($res = db_query($checkSql)) && ($row = db_fetch_row($res)))
             $dbStatus = (int) $row[0];
 
-        file_put_contents(
-            '/tmp/autostatus-debug.log',
-            "[" . date('Y-m-d H:i:s') . "] db sync (" . $reason . ")=" . ($ok ? 'ok' : 'fail')
-            . ": #" . (int)$ticketId . " target=" . (int)$targetId . " db_status=" . var_export($dbStatus, true) . "\n",
-            FILE_APPEND
-        );
+        $this->log(sprintf(
+            'db sync (%s)=%s: #%d target=%d db_status=%s',
+            $reason, $ok ? 'ok' : 'fail',
+            (int) $ticketId, (int) $targetId,
+            var_export($dbStatus, true)
+        ));
 
         return $ok && ((int) $dbStatus === (int) $targetId);
     }
 
     private function applyStatusChange($object, $wasUnassigned) {
-        // Is it now assigned?
         $isAssigned = $object->isAssigned()
             || ((int) $object->getStaffId() !== 0)
             || ((int) $object->getTeamId()  !== 0);
 
         if (!$isAssigned) {
-            file_put_contents('/tmp/autostatus-debug.log', "[" . date('Y-m-d H:i:s') . "] skip: not assigned (staff=" . (int)$object->getStaffId() . ", team=" . (int)$object->getTeamId() . ")\n", FILE_APPEND);
+            $this->log(sprintf('skip: not assigned (staff=%d, team=%d)',
+                (int) $object->getStaffId(), (int) $object->getTeamId()));
             return;
         }
 
         $targetId = $this->resolveStructuredRuleTargetStatusId($object);
-        $rawTarget = 'structured_rules';
 
         if (!$targetId) {
-            file_put_contents('/tmp/autostatus-debug.log', "[" . date('Y-m-d H:i:s') . "] skip: no matching workflow rule\n", FILE_APPEND);
+            $this->log('skip: no matching workflow rule');
             return;
         }
 
-        file_put_contents('/tmp/autostatus-debug.log', "[" . date('Y-m-d H:i:s') . "] target status=" . $targetId . " (raw=" . var_export($rawTarget, true) . "), wasUnassigned=" . ($wasUnassigned ? 'yes' : 'no') . "\n", FILE_APPEND);
+        $this->log(sprintf('target status=%d, wasUnassigned=%s',
+            $targetId, $wasUnassigned ? 'yes' : 'no'));
 
         if ((int) $object->getStatusId() === (int) $targetId)
             return;
 
         $target = TicketStatus::lookup($targetId);
         if (!$target) {
-            file_put_contents('/tmp/autostatus-debug.log', "[" . date('Y-m-d H:i:s') . "] skip: target status id not found: " . $targetId . "\n", FILE_APPEND);
+            $this->log('skip: target status id not found: ' . $targetId);
             return;
         }
 
         try {
-            $errors = array();
-            $note = false;
-            $before = (int) $object->getStatusId();
+            $errors  = array();
+            $note    = false;
+            $before  = (int) $object->getStatusId();
             $changed = $object->setStatus($target, $note, $errors);
-            $after = (int) $object->getStatusId();
+            $after   = (int) $object->getStatusId();
 
             if ($changed) {
-                file_put_contents('/tmp/autostatus-debug.log', "[" . date('Y-m-d H:i:s') . "] setStatus ok: #" . $object->getId() . " " . $before . " -> " . $after . " (" . $target->getName() . ")\n", FILE_APPEND);
+                $this->log(sprintf('setStatus ok: #%d %d -> %d (%s)',
+                    $object->getId(), $before, $after, $target->getName()));
                 $this->syncStatusInDb($object->getId(), $targetId, 'setStatus-ok');
             } else {
-                file_put_contents('/tmp/autostatus-debug.log', "[" . date('Y-m-d H:i:s') . "] setStatus returned false: #" . $object->getId() . " status=" . $before . " target=" . (int)$targetId . " errors=" . var_export($errors, true) . "\n", FILE_APPEND);
+                $this->log(sprintf('setStatus returned false: #%d status=%d target=%d errors=%s',
+                    $object->getId(), $before, (int) $targetId,
+                    var_export($errors, true)));
 
-                // Retry without staff context (bypass role-bound setStatus restrictions)
+                // Retry without staff context to bypass role-bound restrictions
                 global $thisstaff;
-                $origStaff = $thisstaff ?? null;
+                $origStaff = isset($thisstaff) ? $thisstaff : null;
                 $thisstaff = null;
-                $retryErrors = array();
+                $retryErrors  = array();
                 $retryChanged = $object->setStatus($target, $note, $retryErrors);
-                $retryAfter = (int) $object->getStatusId();
-                $thisstaff = $origStaff;
+                $retryAfter   = (int) $object->getStatusId();
+                $thisstaff    = $origStaff;
 
                 if ($retryChanged) {
-                    file_put_contents('/tmp/autostatus-debug.log', "[" . date('Y-m-d H:i:s') . "] privileged retry ok: #" . $object->getId() . " -> " . $retryAfter . "\n", FILE_APPEND);
+                    $this->log('privileged retry ok: #' . $object->getId() . ' -> ' . $retryAfter);
                     $this->syncStatusInDb($object->getId(), $targetId, 'privileged-retry-ok');
                 } else {
-                    file_put_contents('/tmp/autostatus-debug.log', "[" . date('Y-m-d H:i:s') . "] privileged retry failed: #" . $object->getId() . " errors=" . var_export($retryErrors, true) . "\n", FILE_APPEND);
-                    // Final fallback: persist ticket status directly in DB
+                    $this->log('privileged retry failed: #' . $object->getId()
+                        . ' errors=' . var_export($retryErrors, true));
                     $this->syncStatusInDb($object->getId(), $targetId, 'final-fallback');
                 }
             }
         } catch (Exception $e) {
-            file_put_contents('/tmp/autostatus-debug.log', "[" . date('Y-m-d H:i:s') . "] ERROR: " . $e->getMessage() . "\n", FILE_APPEND);
+            $this->log('ERROR: ' . $e->getMessage());
         }
     }
 
-    /**
-     * Signal handler. Fires for every model update; we filter to Ticket only,
-     * and only when the assignment fields changed.
-     *
-     * @param mixed $object  The model that changed
-     * @param array $data    Contains 'dirty' => [field => oldValue, ...]
-     */
+    // ---------------------------------------------------------------
+    // Signal handlers
+    // ---------------------------------------------------------------
+
     function onModelUpdated($object, $data) {
         if (!($object instanceof Ticket))
             return;
-
         if (!is_array($data) || empty($data['dirty']))
             return;
 
-        file_put_contents('/tmp/autostatus-debug.log', "[" . date('Y-m-d H:i:s') . "] onModelUpdated() called for " . get_class($object) . "\n", FILE_APPEND);
-        
-        $dirty = $data['dirty'];
-        file_put_contents('/tmp/autostatus-debug.log', "[" . date('Y-m-d H:i:s') . "] dirty keys: " . implode(',', array_keys($dirty)) . "\n", FILE_APPEND);
+        $this->log('onModelUpdated() called for ' . get_class($object));
 
-        // Only react when the assignment actually changed
-        $staffChanged = array_key_exists('staff', $dirty) || array_key_exists('staff_id', $dirty);
-        $teamChanged  = array_key_exists('team', $dirty)  || array_key_exists('team_id', $dirty);
-        
-        if (!$staffChanged && !$teamChanged) {
+        $dirty        = $data['dirty'];
+        $staffChanged = array_key_exists('staff',   $dirty) || array_key_exists('staff_id', $dirty);
+        $teamChanged  = array_key_exists('team',    $dirty) || array_key_exists('team_id',  $dirty);
+
+        if (!$staffChanged && !$teamChanged)
             return;
-        }
 
-        // Avoid re-entrancy: setStatus() will itself trigger model.updated.
-        // We tag the ticket in-memory so we don't loop.
         if (!empty($object->_autostatus_in_progress))
             return;
 
-        // Was the ticket previously unassigned?
-        // Note: dirty[] contains OLD values (before the update)
         $oldStaff = $staffChanged
             ? $this->chooseDirtyValue($dirty, array('staff_id', 'staff'), (int) $object->getStaffId())
             : (int) $object->getStaffId();
         $oldTeam = $teamChanged
             ? $this->chooseDirtyValue($dirty, array('team_id', 'team'), (int) $object->getTeamId())
             : (int) $object->getTeamId();
-        
+
         $wasUnassigned = ($oldStaff === 0 && $oldTeam === 0);
 
         $object->_autostatus_in_progress = true;
@@ -384,18 +366,33 @@ class AutoStatusPlugin extends Plugin {
     function onObjectEdited($object, $type) {
         if (!($object instanceof Ticket))
             return;
-
-        if (!is_array($type) || ($type['type'] ?? '') !== 'assigned')
+        if (!is_array($type) || (isset($type['type']) ? $type['type'] : '') !== 'assigned')
             return;
-
         if (!empty($object->_autostatus_in_progress))
             return;
 
-        // Fallback path for assignment flows where model.updated dirty fields
-        // are not available with assignee history. Treat as reassignment.
-        file_put_contents('/tmp/autostatus-debug.log', "[" . date('Y-m-d H:i:s') . "] onObjectEdited() assigned fallback\n", FILE_APPEND);
+        $this->log('onObjectEdited() assigned fallback');
         $object->_autostatus_in_progress = true;
         $this->applyStatusChange($object, false);
         $object->_autostatus_in_progress = false;
+    }
+
+    // ---------------------------------------------------------------
+    // Debug logging
+    // ---------------------------------------------------------------
+
+    private function isDebug() {
+        $cfg = $this->getConfig();
+        return $cfg && $cfg->get('log_debug');
+    }
+
+    private function log($msg) {
+        if (!$this->isDebug())
+            return;
+        file_put_contents(
+            '/tmp/autostatus-debug.log',
+            '[' . date('Y-m-d H:i:s') . '] ' . $msg . "\n",
+            FILE_APPEND
+        );
     }
 }

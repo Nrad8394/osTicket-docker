@@ -1,68 +1,111 @@
 # Auto Status on Allocation
 
 osTicket plugin that updates a ticket's status automatically when it is
-assigned (allocated) or reassigned.
+assigned or reassigned to an agent or team.
 
 ## Why
 
-osTicket keeps assignment and status independent. Filters only fire on ticket
-*creation*, so reassignments don't trigger any status change. This plugin
-hooks the `model.updated` signal so it catches every assignment change —
-from the agent UI, ticket filters, the API, or other plugins — uniformly.
+osTicket keeps assignment and status independent. Ticket filters only fire on
+ticket *creation*, so reassignments don't trigger any status change. This
+plugin hooks the `model.updated` signal so it catches every assignment change
+— from the agent UI, ticket filters, the API, or other plugins — uniformly.
+
+---
 
 ## Install
 
-1. Copy this folder to `include/plugins/auto-status/` on your osTicket server:
+1. Copy this folder to `include/plugins/auto-status/`:
    ```
    include/plugins/auto-status/
      ├── plugin.php
      ├── autostatus.php
      └── config.php
    ```
-2. In the staff control panel: **Admin Panel → Manage → Plugins → Add New Plugin**.
-   osTicket scans `include/plugins/` and the new plugin appears in the list.
-3. Install it, then click into it and **Enable**.
-4. Open its **Config** tab and set:
-   - **Status on first allocation** — e.g. `In Progress`
-   - **Status on reassignment** — e.g. `In Progress` or a custom `Reassigned`
-   - **Only change if current status is one of** — optional allow-list, e.g.
-     `Open, Pending`. Leave blank to apply regardless.
-   - **Post internal note on status change** — recommended on, for audit.
+2. **Admin Panel → Manage → Plugins → Add New Plugin.**
+3. Install → Enable → open **Config**.
 
-If you want a distinct `Reassigned` status, create it first under
-**Admin Panel → Manage → Ticket Statuses** (state = Open).
+---
+
+## Configuration — Workflow Rules
+
+The plugin uses a rule engine. Rules are evaluated in order (Rule 1 first);
+the **first enabled rule that matches wins**.
+
+### Adding rules — no count to manage
+
+The config form **auto-expands**: it always shows 3 empty rule slots below the
+last filled rule. To add more rules, simply fill in the last empty slot and
+save — three more empty slots will appear automatically. No need to set a
+count or reload the page separately.
+
+### Rule fields
+
+Each rule has:
+
+| Field | Description |
+|-------|-------------|
+| **Label** | Optional friendly name shown in the rule header |
+| **Enable** | Must be ticked for the rule to fire |
+| **Only if current status is** | Optional. Leave blank to match any status |
+| **Assigned staff** | Optional. Match only when assigned to specific staff |
+| **Assigned team** | Optional. Match only when assigned to a specific team |
+| **Assignee role** | Optional. Match only when the assignee holds a specific role |
+| **Set status to** | The target status when this rule matches |
+
+Leave any filter field blank to match everything in that dimension.
+
+### Example setup
+
+| Rule | Trigger | Set status to |
+|------|---------|---------------|
+| Rule 1 | Any assignment, status = Open | `In Progress` |
+| Rule 2 | Assigned to Support Team | `In Progress` |
+| Rule 3 | Assigned to a specific escalation agent | `Escalated` |
+
+Create custom statuses first under **Admin Panel → Manage → Ticket Statuses**
+(state = Open).
+
+---
+
+## Diagnostics
+
+Enable **Write debug log to `/tmp/autostatus-debug.log`** in the config to
+trace rule evaluation. Disable this in production.
+
+---
 
 ## How it works
 
-- Connects to `Signal::connect('model.updated', ...)` in `bootstrap()`.
-- On every model save, checks whether the dirty fields include `staff_id` or
-  `team_id`. If not, returns immediately — cheap.
-- Determines whether the previous state was unassigned (first allocation) or
-  already assigned (reassignment), and picks the configured target status.
-- Skips when the new state is unassigned (someone clearing the assignment).
-- Uses an in-memory re-entrancy flag (`_autostatus_in_progress`) because
-  `setStatus()` itself emits `model.updated` and would otherwise loop.
-- Wraps `setStatus()` in try/catch so the parent assignment flow is never
-  broken by a status-change error.
+- Connects to `Signal::connect('model.updated', …)` and
+  `Signal::connect('object.edited', …)` in `bootstrap()`.
+- On every model save, checks whether dirty fields include `staff_id` or
+  `team_id`. If not, returns immediately — cheap no-op.
+- Iterates enabled rules in order; applies the target status of the first
+  matching rule.
+- Skips when the ticket is not assigned after the change.
+- Uses an in-memory re-entrancy flag (`_autostatus_in_progress`) to prevent
+  `setStatus()` — which itself emits `model.updated` — from looping.
+- Falls back to a direct DB update if `setStatus()` is blocked by role
+  permissions on the current staff context.
+
+---
 
 ## Test
 
 1. Create a new ticket, leave it unassigned.
-2. Assign it to an agent → status should flip to your "first allocation"
-   status, and (if enabled) an internal note is posted.
-3. Reassign to a different agent or team → status should flip to your
-   "reassignment" status.
+2. Assign it to an agent → status should flip to your configured target.
+3. Reassign to a different agent or team → the matching rule's status applies.
 4. Clear the assignment → status should not change.
-5. If you set an allow-list, change the ticket status to something outside
-   the list and reassign — status should *not* change.
+5. If a rule has a "current status" filter, set the ticket to a status
+   outside that filter and reassign — the rule should not fire.
+
+---
 
 ## Notes / gotchas
 
-- The `model.updated` signal passes `dirty` as `[field => oldValue]`. We rely
-  on key presence, not value, to detect the change.
+- The `model.updated` signal passes `dirty` as `[field => oldValue]`. Rule
+  evaluation uses the current (post-update) state of the ticket.
 - If you also use ticket filters that set status on creation, those still run
-  — this plugin only acts on assignment changes, so the two don't fight.
-- Tested mentally against osTicket 1.18 / 1.17 internals. If your fork has
-  patched `Ticket::assign()` heavily, double-check that it still calls the
-  base save path that emits `model.updated`.
-- Survives osTicket upgrades — no core files are modified.
+  — this plugin only acts on assignment changes, so the two do not conflict.
+- No core osTicket files are modified — survives upgrades.
+

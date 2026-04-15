@@ -61,6 +61,7 @@ COPY ${OSTICKET_DIR}/ ./
 
 # ── Custom plugins ───────────────────────────────────────────────
 COPY plugins/auto-status/ /var/www/html/include/plugins/auto-status/
+COPY plugins/auto-sla/ /var/www/html/include/plugins/auto-sla/
 
 # ── Fix installer paths: copy setup streams to upgrader location ──
 RUN mkdir -p /var/www/html/include/upgrader/streams/core && \

@@ -5,29 +5,33 @@ require_once INCLUDE_DIR . 'class.ticket.php';
 
 class AutoStatusConfig extends PluginConfig {
 
-    private function normalizeRuleCount($raw) {
-        $count = (int) $raw;
-        if ($count < 1)
-            $count = 1;
-        if ($count > 50)
-            $count = 50;
-        return $count;
+    /**
+     * Scan saved config to find the highest-numbered rule that has any
+     * meaningful data in it. Returns 0 if no rules are configured yet.
+     */
+    private function getLastFilledRule() {
+        for ($i = 50; $i >= 1; $i--) {
+            if ($this->get('rule_'.$i.'_enabled')
+                    || $this->get('rule_'.$i.'_target_status')
+                    || $this->get('rule_'.$i.'_name'))
+                return $i;
+        }
+        return 0;
     }
 
     function getOptions() {
         // Build dropdown lists from live system data
         $targetChoices = array('' => '— Do not change —');
-        $fromChoices = array('' => 'Any current status');
-        $staffChoices = array();
-        $teamChoices = array();
-        $roleChoices = array();
+        $fromChoices   = array('' => 'Any current status');
+        $staffChoices  = array();
+        $teamChoices   = array();
+        $roleChoices   = array();
 
-        $sql = 'SELECT id, name FROM ' . TICKET_STATUS_TABLE
-             . ' ORDER BY name';
+        $sql = 'SELECT id, name FROM ' . TICKET_STATUS_TABLE . ' ORDER BY name';
         if (($res = db_query($sql))) {
             while (list($id, $name) = db_fetch_row($res)) {
                 $targetChoices[$id] = $name;
-                $fromChoices[$id] = $name;
+                $fromChoices[$id]   = $name;
             }
         }
 
@@ -36,9 +40,8 @@ class AutoStatusConfig extends PluginConfig {
         if (($sres = db_query($ssql))) {
             while (list($sid, $sname) = db_fetch_row($sres)) {
                 $sid = (int) $sid;
-                if ($sid <= 0)
-                    continue;
-                $staffChoices[$sid] = trim((string) $sname);
+                if ($sid > 0)
+                    $staffChoices[$sid] = trim((string) $sname);
             }
         }
 
@@ -46,9 +49,8 @@ class AutoStatusConfig extends PluginConfig {
         if (($tres = db_query($tsql))) {
             while (list($tid, $tname) = db_fetch_row($tres)) {
                 $tid = (int) $tid;
-                if ($tid <= 0)
-                    continue;
-                $teamChoices[$tid] = trim((string) $tname);
+                if ($tid > 0)
+                    $teamChoices[$tid] = trim((string) $tname);
             }
         }
 
@@ -59,74 +61,90 @@ class AutoStatusConfig extends PluginConfig {
             }
         }
 
-        $configuredCount = $this->normalizeRuleCount($this->get('rule_count'));
+        // Auto-expand: show last filled rule + 3 empty slots (min 3, max 50)
+        $lastFilled   = $this->getLastFilledRule();
+        $visibleCount = max(3, min(50, $lastFilled + 3));
 
         $options = array(
             'workflow_rules_info' => new SectionBreakField(array(
-                'label' => 'Workflow transition rules (recommended)',
-                'hint'  => 'Fully configurable rules. No pre-made flow. '
-                         . 'Set rule count, save, and only that many rules will be shown. '
-                         . 'Increase later whenever needed. First matching enabled rule wins.',
-            )),
-            'rule_count' => new TextboxField(array(
-                'label' => 'Number of rules to configure',
-                'hint'  => 'Choose how many rules to use (1-50).',
-                'configuration' => array('size' => 5, 'length' => 2),
-                'default' => (string) $configuredCount,
+                'label' => 'Workflow Transition Rules',
+                'hint'  => 'Rules are evaluated top-to-bottom; the first enabled '
+                         . 'rule that matches wins. Fill in a rule and save — '
+                         . 'three empty slots always appear below the last filled '
+                         . 'rule so you never need to change a count manually.',
             )),
         );
 
-        for ($i = 1; $i <= $configuredCount; $i++) {
-            $label = 'Rule ' . $i;
+        for ($i = 1; $i <= $visibleCount; $i++) {
+            $savedName = (string) $this->get('rule_'.$i.'_name');
+            $heading   = $savedName !== ''
+                ? sprintf('Rule %d — %s', $i, $savedName)
+                : sprintf('Rule %d', $i);
+
+            // Visual separator before each rule
+            $options['rule_'.$i.'_section'] = new SectionBreakField(array(
+                'label' => $heading,
+            ));
 
             $options['rule_'.$i.'_name'] = new TextboxField(array(
-                'label' => $label . ' label',
-                'hint'  => 'Optional name for your reference.',
+                'label'         => 'Rule ' . $i . ': label',
+                'hint'          => 'Optional friendly name for your reference.',
                 'configuration' => array('size' => 50, 'length' => 255),
-                'default' => '',
+                'default'       => '',
             ));
 
             $options['rule_'.$i.'_enabled'] = new BooleanField(array(
-                'label' => 'Enable rule '.$i.' — '.$label,
+                'label'   => 'Enable rule ' . $i,
                 'default' => false,
             ));
 
             $options['rule_'.$i.'_from_status'] = new ChoiceField(array(
-                'label' => 'Rule '.$i.' current status',
+                'label'   => 'Rule ' . $i . ': only if current status is',
+                'hint'    => 'Leave blank to match regardless of current status.',
                 'choices' => $fromChoices,
                 'default' => '',
             ));
 
             $options['rule_'.$i.'_staff_ids'] = new ChoiceField(array(
-                'label' => 'Rule '.$i.' staff assignee(s)',
-                'hint'  => 'Optional. Select one or more staff. Leave blank to match any staff.',
-                'choices' => $staffChoices,
-                'default' => array(),
+                'label'         => 'Rule ' . $i . ': assigned staff',
+                'hint'          => 'Optional. Leave blank to match any staff assignment.',
+                'choices'       => $staffChoices,
+                'default'       => array(),
                 'configuration' => array('multiselect' => true),
             ));
 
             $options['rule_'.$i.'_team_ids'] = new ChoiceField(array(
-                'label' => 'Rule '.$i.' team assignee(s)',
-                'hint'  => 'Optional. Select one or more teams. Leave blank to match any team.',
-                'choices' => $teamChoices,
-                'default' => array(),
+                'label'         => 'Rule ' . $i . ': assigned team',
+                'hint'          => 'Optional. Leave blank to match any team assignment.',
+                'choices'       => $teamChoices,
+                'default'       => array(),
                 'configuration' => array('multiselect' => true),
             ));
 
             $options['rule_'.$i.'_role_ids'] = new ChoiceField(array(
-                'label' => 'Rule '.$i.' assignee role(s)',
-                'hint'  => 'Optional. Select one or more roles. Leave blank to match any role.',
-                'choices' => $roleChoices,
-                'default' => array(),
+                'label'         => 'Rule ' . $i . ': assignee role',
+                'hint'          => 'Optional. Leave blank to match any role.',
+                'choices'       => $roleChoices,
+                'default'       => array(),
                 'configuration' => array('multiselect' => true),
             ));
 
             $options['rule_'.$i.'_target_status'] = new ChoiceField(array(
-                'label' => 'Rule '.$i.' target status',
+                'label'   => 'Rule ' . $i . ': set status to',
+                'hint'    => 'The status to apply when this rule matches.',
                 'choices' => $targetChoices,
                 'default' => '',
             ));
         }
+
+        $options['debug_break'] = new SectionBreakField(array(
+            'label' => 'Diagnostics',
+        ));
+        $options['log_debug'] = new BooleanField(array(
+            'label'   => 'Write debug log to /tmp/autostatus-debug.log',
+            'default' => false,
+            'hint'    => 'Enable only when diagnosing issues. Disable in production.',
+        ));
 
         return $options;
     }
