@@ -124,3 +124,82 @@ cause errors.
 - Plays well alongside **Auto Status on Allocation** — they hook different
   lifecycle moments.
 
+---
+
+## Troubleshooting (issues we actually hit)
+
+### 1) Severity changed but SLA did not update
+
+**Symptoms**
+- Ticket thread shows field updates (e.g. `issue severity added Medium ...`)
+- SLA Plan stays unchanged or empty.
+
+**Checks**
+- Confirm plugin is enabled: **Admin → Manage → Plugins**.
+- Confirm variable names in config match your form fields.
+  - Common variables in this environment: `issue_type`, `issue_severity`
+  - Legacy/common defaults: `type`, `severity`
+- Confirm matrix mapping exists for the exact Type × Severity pair.
+
+**Why this happened before**
+- Form answers may be stored as JSON-like maps (for example `{"59":"Minor"}`),
+  not plain text labels.
+
+**Current behavior**
+- Plugin normalizes JSON/map values and falls back across common variable names,
+  so these updates are now handled.
+
+### 2) Mapping saved, but runtime resolves empty target SLA
+
+**Symptoms**
+- Config UI shows selected SLA plans.
+- Runtime behaves as if no mapping exists.
+
+**Why this happened before**
+- osTicket can store ChoiceField selections as JSON maps, not scalar IDs.
+
+**Current behavior**
+- Plugin parses scalar, array, and JSON-map values and extracts the SLA ID safely.
+
+### 3) Existing SLA blocks remap after Type/Severity changes
+
+**Key setting**
+- `Overwrite an SLA that was already set`
+
+**Current behavior**
+- If OFF: manual/unrelated SLA selections are preserved.
+- Matrix-managed SLA values can still remap when Type/Severity changes.
+
+### 4) No debug file appears
+
+**Symptoms**
+- `/tmp/autosla-debug.log` does not exist.
+
+**Fix**
+- Enable **Write debug log to `/tmp/autosla-debug.log`** in plugin config.
+- Re-test one ticket update; log file is created on first write.
+
+### 5) Code changed locally but behavior did not change
+
+If running in Docker, rebuild/restart so plugin files are copied into container:
+
+- Rebuild image and restart containers.
+- Then re-test.
+
+### 6) Plugin configured in DB but still inactive
+
+Verify plugin instance flag is enabled (bitmask includes `1`).
+If needed, re-enable from Admin UI and save config once.
+
+---
+
+## Recommended quick verification flow
+
+1. Set plugin variables to your actual form variable names.
+2. Enable debug logging.
+3. Edit one ticket and change only Severity.
+4. Confirm:
+   - ticket thread note appears (if enabled)
+   - SLA Plan changes to mapped target
+   - `/tmp/autosla-debug.log` shows matched type/severity and target SLA ID.
+

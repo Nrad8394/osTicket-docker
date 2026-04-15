@@ -109,3 +109,62 @@ trace rule evaluation. Disable this in production.
   — this plugin only acts on assignment changes, so the two do not conflict.
 - No core osTicket files are modified — survives upgrades.
 
+---
+
+## Troubleshooting (issues we actually hit)
+
+### 1) Ticket assignment changed but status stayed Open
+
+**Checks**
+- Plugin installed and enabled.
+- At least one workflow rule is:
+  - enabled
+  - has a target status
+  - matches current status/assignee conditions.
+
+**Common misses**
+- `from status` filter excludes current ticket status.
+- Rule has staff/team/role filters that do not match the actual assignee.
+
+### 2) Works for manual assign, not for filter/API/background updates
+
+This plugin listens to both:
+- `model.updated`
+- `object.edited` (assigned fallback)
+
+If behavior differs by source, enable debug log and verify which event path fired.
+
+### 3) Rule config looks saved, but runtime acts like values are missing
+
+osTicket may store multi-select values as JSON maps or arrays.
+Current plugin behavior parses scalar/array/JSON forms before matching.
+
+### 4) `setStatus()` fails silently in some contexts
+
+In permission-bound contexts, status updates can be blocked by role checks.
+
+Current plugin behavior:
+- normal `setStatus()` attempt
+- privileged retry without staff context
+- direct DB sync fallback with read-back verification.
+
+### 5) No debug log file
+
+Enable **Write debug log to `/tmp/autostatus-debug.log`** in config.
+Log file is created only after first write event.
+
+### 6) Local code updated but app behavior unchanged
+
+In Docker deployments, rebuild and restart containers so updated plugin files are deployed.
+
+---
+
+## Recommended quick verification flow
+
+1. Enable debug logging.
+2. Create or pick an Open, unassigned ticket.
+3. Assign to a matching staff/team.
+4. Confirm:
+   - status changes to target status
+   - debug log shows matched rule number and target status ID.
+
